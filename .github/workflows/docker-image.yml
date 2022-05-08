@@ -4,6 +4,14 @@ on:
   push:
   pull_request:
     branches: [ master ]
+    
+env:
+  AZURE_CONTAINER_REGISTRY: "your-azure-container-registry"
+  CONTAINER_NAME: "your-container-name"
+  RESOURCE_GROUP: "your-resource-group"
+  CLUSTER_NAME: "your-cluster-name"
+  IMAGE_PULL_SECRET_NAME: "your-image-pull-secret-name"
+  DEPLOYMENT_MANIFEST_PATH: 'your-deployment-manifest-path'
 
 jobs:
 
@@ -62,6 +70,4 @@ jobs:
         with:
             action: deploy
             images: |
-              ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
-            imagepullsecrets: |
-              ${{ env.IMAGE_PULL_SECRET_NAME }}
+              ${{ secrets.DOCKER_HUB_USERNAME }}.dockerhub.io/henry_dev_go:latest

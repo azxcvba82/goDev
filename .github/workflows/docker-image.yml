@@ -68,4 +68,4 @@ jobs:
         with:
             action: deploy
             images: |
-              ${{ secrets.DOCKER_HUB_USERNAME }}.dockerhub.io/henry_dev_go:latest
+              docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/henry_dev_go:latest

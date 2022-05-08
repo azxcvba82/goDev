@@ -6,12 +6,8 @@ on:
     branches: [ master ]
     
 env:
-  AZURE_CONTAINER_REGISTRY: "your-azure-container-registry"
-  CONTAINER_NAME: "your-container-name"
-  RESOURCE_GROUP: "your-resource-group"
-  CLUSTER_NAME: "your-cluster-name"
-  IMAGE_PULL_SECRET_NAME: "your-image-pull-secret-name"
-  DEPLOYMENT_MANIFEST_PATH: 'your-deployment-manifest-path'
+  RESOURCE_GROUP: "devRG"
+  CLUSTER_NAME: "henry-aks-dev"
 
 jobs:
 

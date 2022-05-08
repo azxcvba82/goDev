@@ -33,6 +33,35 @@ jobs:
           push: true
           tags: 
            ${{ secrets.DOCKER_HUB_USERNAME }}/henry_dev_go:latest
-           ${{ secrets.DOCKER_HUB_USERNAME }}/henry_dev_go:$(date +%s)
           cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/henry_dev_go:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/henry_dev_go:buildcache,mode=max
+          
+
+
+      -
+        # Logs in with your Azure credentials
+        name: Azure login
+        uses: azure/login@v1.4.3
+        with:
+            client-id: ${{ secrets.AZURE_CLIENT_ID }}
+            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      -
+        # Retrieves your Azure Kubernetes Service cluster's kubeconfig file
+        name: Get K8s context
+        uses: azure/aks-set-context@v2.0
+        with:
+            resource-group: ${{ env.RESOURCE_GROUP }}
+            cluster-name: ${{ env.CLUSTER_NAME }}
+
+      -
+        # Deploys application based on given manifest file
+        name: Deploys application
+        uses: Azure/k8s-deploy@v3.1
+        with:
+            action: deploy
+            images: |
+              ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+            imagepullsecrets: |
+              ${{ env.IMAGE_PULL_SECRET_NAME }}

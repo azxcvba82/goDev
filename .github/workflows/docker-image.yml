@@ -41,6 +41,7 @@ jobs:
         with:
             action: deploy
             manifests: |
+              ${{ github.workspace }}/manifests/deployment.yaml
             images: |
               docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/henry_dev_go:latest
 

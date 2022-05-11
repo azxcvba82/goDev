@@ -8,7 +8,6 @@ on:
 env:
   RESOURCE_GROUP: "devRG"
   CLUSTER_NAME: "henry-aks-dev"
-  SUBSCRIPTION: "6a2ef524-92d0-4a56-a4c3-23a4c881f15f"
 
 jobs:
 
@@ -47,11 +46,7 @@ jobs:
 
 
       -
-        # Logs in with your Azure credentials
-        name: Azure login
-        uses: azure/login@v1.4.3
-        with:
-          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
 
       -
         # Retrieves your Azure Kubernetes Service cluster's kubeconfig file
@@ -60,6 +55,7 @@ jobs:
         with:
             resource-group: ${{ env.RESOURCE_GROUP }}
             cluster-name: ${{ env.CLUSTER_NAME }}
+            credentials: ${{ secrets.AZURE_CREDENTIALS }}
 
       -
         # Deploys application based on given manifest file

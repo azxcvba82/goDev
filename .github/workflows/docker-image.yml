@@ -19,6 +19,31 @@ jobs:
       contents: read
       id-token: write
     steps:
+        # Logs in with your Azure credentials
+      - 
+        name: Azure login
+        uses: azure/login@v1.3.3
+        with:
+            credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      -
+        # Retrieves your Azure Kubernetes Service cluster's kubeconfig file
+        name: Get K8s context
+        uses: azure/aks-set-context@v2.0
+        with:
+            resource-group: ${{ env.RESOURCE_GROUP }}
+            cluster-name: ${{ env.CLUSTER_NAME }}
+
+
+      -
+        # Deploys application based on given manifest file
+        name: Deploys application
+        uses: Azure/k8s-deploy@v3.1
+        with:
+            action: deploy
+            images: |
+              docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/henry_dev_go:latest
+
+    
       -
         name: Checkout 
         uses: actions/checkout@v2
@@ -44,21 +69,3 @@ jobs:
           cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/henry_dev_go:buildcache,mode=max
           
 
-
-      -
-        # Retrieves your Azure Kubernetes Service cluster's kubeconfig file
-        name: Get K8s context
-        uses: azure/aks-set-context@v2.0
-        with:
-            resource-group: ${{ env.RESOURCE_GROUP }}
-            cluster-name: ${{ env.CLUSTER_NAME }}
-            credentials: ${{ secrets.AZURE_CREDENTIALS }}
-
-      -
-        # Deploys application based on given manifest file
-        name: Deploys application
-        uses: Azure/k8s-deploy@v3.1
-        with:
-            action: deploy
-            images: |
-              docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/henry_dev_go:latest

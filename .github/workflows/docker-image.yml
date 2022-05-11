@@ -22,9 +22,9 @@ jobs:
         # Logs in with your Azure credentials
       - 
         name: Azure login
-        uses: azure/login@v1.3.3
+        uses: azure/login@v1
         with:
-            credentials: ${{ secrets.AZURE_CREDENTIALS }}
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
       -
         # Retrieves your Azure Kubernetes Service cluster's kubeconfig file
         name: Get K8s context

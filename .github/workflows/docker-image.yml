@@ -8,6 +8,7 @@ on:
 env:
   RESOURCE_GROUP: "devRG"
   CLUSTER_NAME: "henry-aks-dev"
+  SUBSCRIPTION: "6a2ef524-92d0-4a56-a4c3-23a4c881f15f"
 
 jobs:
 
@@ -52,7 +53,7 @@ jobs:
         with:
             client-id: ${{ secrets.AZURE_CLIENT_ID }}
             tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            subscription-id: ${{ env.SUBSCRIPTION }}
 
       -
         # Retrieves your Azure Kubernetes Service cluster's kubeconfig file

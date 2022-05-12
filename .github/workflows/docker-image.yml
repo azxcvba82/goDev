@@ -37,8 +37,9 @@ jobs:
       -
         # Deploys application based on given manifest file
         name: Deploys application
-        uses: Azure/k8s-deploy@v3.1
+        uses: ghostzero/kubectl@v1
         with:
+            args: set image --record deployment/app-go-dev-api container=docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/henry_dev_go:latest
             action: deploy
             manifests: |
               ${{ github.workspace }}/manifests/deployment.yaml

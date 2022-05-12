@@ -11,3 +11,6 @@ spec:
     metadata:
       labels:
         app: go-dev-api
+    spec:
+      containers:
+      - name: go-dev-api

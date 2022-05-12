@@ -1,0 +1,24 @@
+info:
+  contact: {}
+paths:
+  /hello:
+    get:
+      consumes:
+      - application/json
+      description: get users in a group
+      parameters:
+      - description: Group ID
+        in: path
+        name: group_id
+        required: true
+        type: integer
+      - description: Gender
+        in: query
+        name: gender
+        type: string
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+swagger: "2.0"

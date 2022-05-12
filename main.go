@@ -3,11 +3,11 @@ package main
 import (
 	"net/http"
 
-	_ "github.com/azxcvba82/goDev/docs"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
+
+	_ "github.com/swaggo/echo-swagger/example/docs"
 )
 
 func main() {

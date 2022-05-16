@@ -13,7 +13,10 @@ import (
 	"database/sql"
 	_ "main/docs"
 
+<<<<<<< HEAD
 	_ "github.com/go-sql-driver/mysql"
+=======
+>>>>>>> 93caacb39fe58a4dbb51c8ea77697ee6a280241b
 )
 
 func main() {

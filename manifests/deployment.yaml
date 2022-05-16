@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-go-dev-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-dev-api
+  template:
+    metadata:
+      labels:
+        app: go-dev-api
+    spec:
+      containers:
+      - name: go-dev-api
+        image: docker.io/azxcvba81/henry_dev_go:latest

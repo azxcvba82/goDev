@@ -8,6 +8,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "main/docs"
+
 )
 
 func main() {

@@ -7,7 +7,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
-	_ "github.com/swaggo/echo-swagger/example/docs"
+	_ "main/docs"
+
 )
 
 func main() {

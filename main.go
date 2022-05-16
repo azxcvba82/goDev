@@ -1,13 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
+	"database/sql"
 	_ "main/docs"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -37,5 +43,37 @@ func main() {
 // @Failure 500 "error"
 // @Router /hello [get]
 func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
+	//os.Setenv("SQLCONNECTSTRING", "root:@tcp(20.99.156.107:3306)/godev")
+	db, err := sql.Open("mysql", os.Getenv("SQLCONNECTSTRING"))
+	if err != nil {
+		panic(err)
+	}
+	db.SetConnMaxLifetime(time.Minute * 3)
+
+	rows, err := db.Query("SELECT fAccount, fPassword, fEmail, fPrivilege  FROM tMember LIMIT 2")
+	checkErr(err)
+
+	mes := ""
+	for rows.Next() {
+		var fAccount string
+		var fPassword string
+		var fEmail string
+		var fPrivilege int
+		err = rows.Scan(&fAccount, &fPassword, &fEmail, &fPrivilege)
+		checkErr(err)
+		fmt.Println(fAccount)
+		fmt.Println(fPassword)
+		fmt.Println(fEmail)
+		fmt.Println(fPrivilege)
+		mes = fAccount + fPassword + fEmail
+	}
+
+	return c.String(http.StatusOK, "Hello, World!"+mes)
+}
+
+func checkErr(err error) {
+	if err != nil {
+		fmt.Println(err.Error())
+		panic(err)
+	}
 }

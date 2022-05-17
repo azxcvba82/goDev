@@ -7,7 +7,7 @@
 <p align="center">
     <a href="https://azxcvba99.net/" target="blank">Online Demo</a>
     ·
-     <a href="https://azxcvba99.net/swagger/index.html" target="blank">Back-end swagger</a>
+     <a href="https://api.azxcvba99.net/swagger/index.html" target="blank">Back-end swagger</a>
 </p>
 
 ## 🚤 Purpose

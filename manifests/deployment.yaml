@@ -22,3 +22,6 @@ spec:
               name: sql-config
               key: sqlconnectstring
               optional: false
+        - name: GITHUBHASHVALUE
+          value: ${{ github.sha }}
+

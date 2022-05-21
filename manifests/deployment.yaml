@@ -19,6 +19,6 @@ spec:
         - name: SQLCONNECTSTRING
           valueFrom:
             secretKeyRef:
-              name: mysecret
-              key: username
+              name: sql-config
+              key: sqlconnectstring
               optional: false

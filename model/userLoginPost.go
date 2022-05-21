@@ -19,7 +19,6 @@ func FindUser(u *UserLoginPost) UserLoginPost {
 		return user
 	}
 
-	//os.Setenv("SQLCONNECTSTRING", "root:@tcp(20.99.156.107:3306)/godev")
 	db, err := sql.Open("mysql", os.Getenv("SQLCONNECTSTRING"))
 	if err != nil {
 		panic(err)
@@ -46,6 +45,24 @@ func FindUser(u *UserLoginPost) UserLoginPost {
 			}
 		}
 	}
+	return user
+}
+
+func CreateUser(u *UserLoginPost) UserLoginPost {
+	var user UserLoginPost
+	if u.Account == "" {
+		return user
+	}
+	db, err := sql.Open("mysql", os.Getenv("SQLCONNECTSTRING"))
+	if err != nil {
+		panic(err)
+	}
+	db.SetConnMaxLifetime(time.Minute * 3)
+	queryString := `INSERT INTO tMember (fAccount, fPassword, fEmail) VALUES (?,?,?)`
+	result, err := db.Exec(queryString, u.Account, u.Password, u.Email)
+	checkErr(err)
+	fmt.Println(result)
+
 	return user
 }
 

@@ -12,7 +12,7 @@ import (
 
 var signingKey = []byte("secret")
 
-// @Description get users in a group
+// @Description login user
 // @Accept  json
 // @Param login body object true "json"
 // @Success 200 "ok"
@@ -55,4 +55,51 @@ func login(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{
 		"token": t,
 	})
+}
+
+// @Description create user
+// @Accept  json
+// @Param signup body object true "json"
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /signup [post]
+func signup(c echo.Context) error {
+	user := new(model.UserLoginPost)
+	if err := c.Bind(user); err != nil {
+		return err
+	}
+
+	if user.Account == "" || user.Password == "" {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: "invalid name or password",
+		}
+	}
+
+	if u := model.FindUser(&model.UserLoginPost{Account: user.Account}); u.Account == user.Account {
+		return &echo.HTTPError{
+			Code:    http.StatusConflict,
+			Message: "name already exists",
+		}
+	}
+	model.CreateUser(user)
+	return c.JSON(http.StatusCreated, user)
+}
+
+// @Description test
+// @Accept  json
+// @Param user path string true "token"
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /api/test [get]
+// @security securityDefinitions.apikey ApiKeyAuth
+func test(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*jwtCustomClaims)
+	account := claims.Account
+	return c.JSON(http.StatusOK, account)
+}
+
+func accessible(c echo.Context) error {
+	return c.String(http.StatusOK, "Accessible")
 }

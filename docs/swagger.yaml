@@ -1,11 +1,29 @@
 info:
   contact: {}
 paths:
+  /api/test:
+    get:
+      consumes:
+      - application/json
+      description: test
+      parameters:
+      - description: token
+        in: path
+        name: user
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      security:
+      - securityDefinitions.apikey ApiKeyAuth: []
   /login:
     post:
       consumes:
       - application/json
-      description: get users in a group
+      description: login user
       parameters:
       - description: json
         in: body
@@ -18,4 +36,26 @@ paths:
           description: ok
         "500":
           description: error
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: create user
+      parameters:
+      - description: json
+        in: body
+        name: signup
+        required: true
+        schema:
+          type: object
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

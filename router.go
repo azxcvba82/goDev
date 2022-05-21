@@ -24,8 +24,9 @@ func newRouter() *echo.Echo {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	e.POST("/signup", login) // POST /signup
-	e.POST("/login", login)  // POST /login
+	e.POST("/signup", signup) // POST /signup
+	e.POST("/login", login)   // POST /login
+	e.GET("/", accessible)
 
 	api := e.Group("/api")
 	api.Use(middleware.JWTWithConfig(middleware.JWTConfig{
@@ -33,7 +34,8 @@ func newRouter() *echo.Echo {
 		SigningKey: []byte("secret"),
 	}))
 
-	api.GET("/todos", login)               // GET /api/todos
+	api.GET("", test)
+	api.GET("/test", test)                 // GET /api/todos
 	api.POST("/todos", login)              // POST /api/todos
 	api.DELETE("/todos/:id", login)        // DELETE /api/todos/:id
 	api.PUT("/todos/:id/completed", login) // PUT /api/todos/:id/completed

@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "main/docs"
+	"os"
 )
 
 // @securityDefinitions.apikey ApiKeyAuth

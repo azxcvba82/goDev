@@ -17,5 +17,8 @@ spec:
         image: docker.io/azxcvba81/henry_dev_go:latest
         env:
         - name: SQLCONNECTSTRING
-          value: ${{ secrets.SQLCONNECTSTRING }}
-
+          valueFrom:
+            secretKeyRef:
+              name: sql-config
+              key: sqlconnectstring
+              optional: false

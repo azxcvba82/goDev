@@ -35,7 +35,7 @@ func newRouter() *echo.Echo {
 	}))
 
 	api.GET("", test)
-	api.GET("/test", test)                 // GET /api/todos
+	api.GET("/test", test)                 // GET /api/test
 	api.POST("/todos", login)              // POST /api/todos
 	api.DELETE("/todos/:id", login)        // DELETE /api/todos/:id
 	api.PUT("/todos/:id/completed", login) // PUT /api/todos/:id/completed

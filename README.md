@@ -2,7 +2,7 @@
 <h1 align="center">
   🏄‍♂️ Personal Music Store platform
 </h1>
-<p align="center">Privide personal music creator a decentralized platform to sell their art work</p>
+<p align="center">Provide personal music creator a decentralized platform to sell their art work</p>
 
 <p align="center">
     <a href="https://azxcvba99.net/" target="blank">Online Demo</a>

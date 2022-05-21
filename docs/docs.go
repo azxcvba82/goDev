@@ -16,25 +16,21 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/hello": {
-            "get": {
+        "/login": {
+            "post": {
                 "description": "get users in a group",
                 "consumes": [
                     "application/json"
                 ],
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Group ID",
-                        "name": "group_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Gender",
-                        "name": "gender",
-                        "in": "query"
+                        "description": "json",
+                        "name": "login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 ],
                 "responses": {

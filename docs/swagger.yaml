@@ -1,21 +1,18 @@
 info:
   contact: {}
 paths:
-  /hello:
-    get:
+  /login:
+    post:
       consumes:
       - application/json
       description: get users in a group
       parameters:
-      - description: Group ID
-        in: path
-        name: group_id
+      - description: json
+        in: body
+        name: login
         required: true
-        type: integer
-      - description: Gender
-        in: query
-        name: gender
-        type: string
+        schema:
+          type: object
       responses:
         "200":
           description: ok

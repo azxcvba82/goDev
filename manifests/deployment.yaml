@@ -15,3 +15,6 @@ spec:
       containers:
       - name: go-dev-api
         image: docker.io/azxcvba81/henry_dev_go:latest
+        env:
+        - name: SQLCONNECTSTRING
+          value: secrets.SQLCONNECTSTRING

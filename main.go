@@ -2,7 +2,6 @@ package main
 
 import (
 	_ "main/docs"
-	"os"
 )
 
 // @title           Swagger API
@@ -12,7 +11,7 @@ import (
 // @in header
 // @name Authorization
 func main() {
-	os.Setenv("SQLCONNECTSTRING", "root:user1234@tcp(20.99.156.107:3306)/godev")
+	//os.Setenv("SQLCONNECTSTRING", "root:@tcp(20.99.156.107:3306)/godev")
 	router := newRouter()
 	router.Logger.Fatal(router.Start(":80"))
 }

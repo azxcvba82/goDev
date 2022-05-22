@@ -1,19 +1,25 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a api web server.",
+        "title": "Swagger API",
+        "contact": {},
+        "version": "1.0"
     },
     "paths": {
-        "/api/test": {
+        "/api/getAccountFromJWT": {
             "get": {
                 "security": [
                     {
                         "securityDefinitions.apikey ApiKeyAuth": []
                     }
                 ],
-                "description": "test",
+                "description": "getAccountFromJWT",
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Token"
                 ],
                 "parameters": [
                     {
@@ -40,6 +46,9 @@
                 "consumes": [
                     "application/json"
                 ],
+                "tags": [
+                    "Token"
+                ],
                 "parameters": [
                     {
                         "description": "json",
@@ -61,11 +70,30 @@
                 }
             }
         },
+        "/mainActivities": {
+            "get": {
+                "description": "mainActivities load",
+                "tags": [
+                    "Homepage"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
         "/signup": {
             "post": {
                 "description": "create user",
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Token"
                 ],
                 "parameters": [
                     {

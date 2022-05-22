@@ -1,11 +1,14 @@
 info:
   contact: {}
+  description: This is a api web server.
+  title: Swagger API
+  version: "1.0"
 paths:
-  /api/test:
+  /api/getAccountFromJWT:
     get:
       consumes:
       - application/json
-      description: test
+      description: getAccountFromJWT
       parameters:
       - description: token
         in: path
@@ -19,6 +22,8 @@ paths:
           description: error
       security:
       - securityDefinitions.apikey ApiKeyAuth: []
+      tags:
+      - Token
   /login:
     post:
       consumes:
@@ -36,6 +41,18 @@ paths:
           description: ok
         "500":
           description: error
+      tags:
+      - Token
+  /mainActivities:
+    get:
+      description: mainActivities load
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Homepage
   /signup:
     post:
       consumes:
@@ -53,6 +70,8 @@ paths:
           description: ok
         "500":
           description: error
+      tags:
+      - Token
 securityDefinitions:
   ApiKeyAuth:
     in: header

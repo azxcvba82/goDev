@@ -24,8 +24,9 @@ func newRouter() *echo.Echo {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	e.POST("/signup", signup) // POST /signup
-	e.POST("/login", login)   // POST /login
+	e.GET("/mainActivities", mainActivities) // POST /mainActivities
+	e.POST("/signup", signup)                // POST /signup
+	e.POST("/login", login)                  // POST /login
 	e.GET("/", accessible)
 
 	api := e.Group("/api")
@@ -34,11 +35,8 @@ func newRouter() *echo.Echo {
 		SigningKey: []byte("secret"),
 	}))
 
-	api.GET("", test)
-	api.GET("/test", test)                 // GET /api/test
-	api.POST("/todos", login)              // POST /api/todos
-	api.DELETE("/todos/:id", login)        // DELETE /api/todos/:id
-	api.PUT("/todos/:id/completed", login) // PUT /api/todos/:id/completed
+	api.GET("", getAccountFromJWT)
+	api.GET("/getAccountFromJWT", getAccountFromJWT) // GET /api/getAccountFromJWT
 
 	return e
 }

@@ -4,6 +4,9 @@ import (
 	_ "main/docs"
 )
 
+// @title           Swagger API
+// @version         1.0
+// @description     This is a api web server.
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization

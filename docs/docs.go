@@ -16,16 +16,19 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/test": {
+        "/api/getAccountFromJWT": {
             "get": {
                 "security": [
                     {
                         "securityDefinitions.apikey ApiKeyAuth": []
                     }
                 ],
-                "description": "test",
+                "description": "getAccountFromJWT",
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Token"
                 ],
                 "parameters": [
                     {
@@ -52,6 +55,9 @@ const docTemplate = `{
                 "consumes": [
                     "application/json"
                 ],
+                "tags": [
+                    "Token"
+                ],
                 "parameters": [
                     {
                         "description": "json",
@@ -73,11 +79,30 @@ const docTemplate = `{
                 }
             }
         },
+        "/mainActivities": {
+            "get": {
+                "description": "mainActivities load",
+                "tags": [
+                    "Homepage"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
         "/signup": {
             "post": {
                 "description": "create user",
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Token"
                 ],
                 "parameters": [
                     {
@@ -112,12 +137,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Swagger API",
+	Description:      "This is a api web server.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

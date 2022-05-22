@@ -2,9 +2,9 @@ package model
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
-	"os"
-	"time"
+	"main/util"
 )
 
 type UserLoginPost struct {
@@ -13,21 +13,19 @@ type UserLoginPost struct {
 	Email    string `string:"email"`
 }
 
-func FindUser(u *UserLoginPost) UserLoginPost {
+func FindUser(sqlConnectionString string, u *UserLoginPost) (model UserLoginPost, err error) {
 	var user UserLoginPost
 	if u.Account == "" {
-		return user
+		outputErr := errors.New("Account empty")
+		return user, outputErr
 	}
 
-	db, err := sql.Open("mysql", os.Getenv("SQLCONNECTSTRING"))
-	if err != nil {
-		panic(err)
-	}
-	db.SetConnMaxLifetime(time.Minute * 3)
 	nullfEmail := new(sql.NullString)
 	queryString := `SELECT fAccount, fPassword, fEmail  FROM tMember WHERE fAccount = ? LIMIT 1`
-	rows, err := db.Query(queryString, u.Account)
-	checkErr(err)
+	rows, err := util.SQLQuery(sqlConnectionString, queryString, u.Account)
+	if err != nil {
+		return user, err
+	}
 
 	for rows.Next() {
 		var fAccount string
@@ -35,7 +33,7 @@ func FindUser(u *UserLoginPost) UserLoginPost {
 		//var fEmail string
 		err = rows.Scan(&fAccount, &fPassword, nullfEmail)
 
-		checkErr(err)
+		util.CheckErr(err)
 		fmt.Println(fAccount)
 		if fAccount == u.Account {
 			user.Account = fAccount
@@ -45,30 +43,22 @@ func FindUser(u *UserLoginPost) UserLoginPost {
 			}
 		}
 	}
-	return user
+	return user, nil
 }
 
-func CreateUser(u *UserLoginPost) UserLoginPost {
+func CreateUser(sqlConnectionString string, u *UserLoginPost) (model UserLoginPost, err error) {
 	var user UserLoginPost
 	if u.Account == "" {
-		return user
+		outputErr := errors.New("Account empty")
+		return user, outputErr
 	}
-	db, err := sql.Open("mysql", os.Getenv("SQLCONNECTSTRING"))
-	if err != nil {
-		panic(err)
-	}
-	db.SetConnMaxLifetime(time.Minute * 3)
+
 	queryString := `INSERT INTO tMember (fAccount, fPassword, fEmail) VALUES (?,?,?)`
-	result, err := db.Exec(queryString, u.Account, u.Password, u.Email)
-	checkErr(err)
+	result, err := util.SQLExec(sqlConnectionString, queryString, u.Account, u.Password, u.Email)
+	if err != nil {
+		return user, err
+	}
 	fmt.Println(result)
 
-	return user
-}
-
-func checkErr(err error) {
-	if err != nil {
-		fmt.Println(err.Error())
-		panic(err)
-	}
+	return user, nil
 }

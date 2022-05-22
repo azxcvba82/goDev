@@ -10,6 +10,10 @@
      <a href="https://api.azxcvba99.net/swagger/index.html" target="blank">Back-end swagger</a>
 </p>
 
+<p align="center">
+  <img src="./infra.png" width="700px">
+</p>
+
 ## 🚤 Purpose
 ### Quick listing your music/album work without any waiting time
 

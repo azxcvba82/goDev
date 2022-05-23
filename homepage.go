@@ -23,3 +23,12 @@ func mainActivities(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, event)
 }
+
+// @Tags         Homepage
+// @Description mainAlbums load
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /mainAlbums [get]
+func mainAlbums(c echo.Context) error {
+	return c.JSON(http.StatusOK, "")
+}

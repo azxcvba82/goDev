@@ -53,6 +53,16 @@ paths:
           description: error
       tags:
       - Homepage
+  /mainAlbums:
+    get:
+      description: mainAlbums load
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Homepage
   /signup:
     post:
       consumes:

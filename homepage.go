@@ -30,5 +30,12 @@ func mainActivities(c echo.Context) error {
 // @Failure 500 "error"
 // @Router /mainAlbums [get]
 func mainAlbums(c echo.Context) error {
-	return c.JSON(http.StatusOK, "")
+	album, err := model.AllAlbum(util.GetSQLConnectString())
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
+	}
+	return c.JSON(http.StatusOK, album)
 }

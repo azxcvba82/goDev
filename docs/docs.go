@@ -95,6 +95,22 @@ const docTemplate = `{
                 }
             }
         },
+        "/mainAlbums": {
+            "get": {
+                "description": "mainAlbums load",
+                "tags": [
+                    "Homepage"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
         "/signup": {
             "post": {
                 "description": "create user",

@@ -24,7 +24,8 @@ func newRouter() *echo.Echo {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	e.GET("/mainActivities", mainActivities) // POST /mainActivities
+	e.GET("/mainActivities", mainActivities) // GET /mainActivities
+	e.GET("/mainAlbums", mainAlbums)         // GET /mainAlbums
 	e.POST("/signup", signup)                // POST /signup
 	e.POST("/login", login)                  // POST /login
 	e.GET("/", accessible)

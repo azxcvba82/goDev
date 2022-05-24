@@ -23,3 +23,19 @@ func mainActivities(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, event)
 }
+
+// @Tags         Homepage
+// @Description mainAlbums load
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /mainAlbums [get]
+func mainAlbums(c echo.Context) error {
+	album, err := model.AllAlbum(util.GetSQLConnectString())
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
+	}
+	return c.JSON(http.StatusOK, album)
+}

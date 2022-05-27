@@ -45,20 +45,3 @@ func FindUser(sqlConnectionString string, u *UserLoginPost) (model UserLoginPost
 	}
 	return user, nil
 }
-
-func CreateUser(sqlConnectionString string, u *UserLoginPost) (model UserLoginPost, err error) {
-	var user UserLoginPost
-	if u.Account == "" {
-		outputErr := errors.New("Account empty")
-		return user, outputErr
-	}
-
-	queryString := `INSERT INTO tMember (fAccount, fPassword, fEmail) VALUES (?,?,?)`
-	result, err := util.SQLExec(sqlConnectionString, queryString, u.Account, u.Password, u.Email)
-	if err != nil {
-		return user, err
-	}
-	fmt.Println(result)
-
-	return user, nil
-}

@@ -16,6 +16,22 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/allkind": {
+            "get": {
+                "description": "allkind load",
+                "tags": [
+                    "Kind"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
         "/api/getAccountFromJWT": {
             "get": {
                 "security": [

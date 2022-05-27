@@ -4,6 +4,16 @@ info:
   title: Swagger API
   version: "1.0"
 paths:
+  /allkind:
+    get:
+      description: allkind load
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Kind
   /api/getAccountFromJWT:
     get:
       consumes:

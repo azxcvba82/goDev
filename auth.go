@@ -72,7 +72,7 @@ func login(c echo.Context) error {
 // @Failure 500 "error"
 // @Router /signup [post]
 func signup(c echo.Context) error {
-	user := new(model.UserLoginPost)
+	user := new(model.UserSignupPost)
 	if err := c.Bind(user); err != nil {
 		return err
 	}

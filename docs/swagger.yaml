@@ -34,6 +34,22 @@ paths:
       - securityDefinitions.apikey ApiKeyAuth: []
       tags:
       - Token
+  /getAlbumById:
+    get:
+      description: getAlbumById load
+      parameters:
+      - description: string valid
+        in: query
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Album
   /login:
     post:
       consumes:

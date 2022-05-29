@@ -28,6 +28,7 @@ func newRouter() *echo.Echo {
 	e.GET("/mainAlbums", mainAlbums)         // GET /mainAlbums
 	e.GET("/getAlbumById", getAlbumById)     // GET /getAlbumById
 	e.GET("/allkind", allkind)               // GET /allkind
+
 	e.POST("/signup", signup)                // POST /signup
 	e.POST("/login", login)                  // POST /login
 	e.GET("/", accessible)

@@ -24,14 +24,15 @@ func newRouter() *echo.Echo {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	e.GET("/mainActivities", mainActivities) // GET /mainActivities
-	e.GET("/mainAlbums", mainAlbums)         // GET /mainAlbums
-	e.GET("/getAlbumById", getAlbumById)     // GET /getAlbumById
+	e.GET("/mainActivities", mainActivities)       // GET /mainActivities
+	e.GET("/mainAlbums", mainAlbums)               // GET /mainAlbums
+	e.GET("/getAlbumById", getAlbumById)           // GET /getAlbumById
+	e.GET("/getAlbumsByKindId", getAlbumsByKindId) // GET /getAlbumsByKindId
 
-	e.GET("/allkind", allkind)               // GET /allkind
+	e.GET("/allkind", allkind) // GET /allkind
 
-	e.POST("/signup", signup)                // POST /signup
-	e.POST("/login", login)                  // POST /login
+	e.POST("/signup", signup) // POST /signup
+	e.POST("/login", login)   // POST /login
 	e.GET("/", accessible)
 
 	api := e.Group("/api")

@@ -30,7 +30,38 @@ func getAlbumById(c echo.Context) error {
 			Message: "id only allow number",
 		}
 	}
-	album, err := model.GetAlbumById(util.GetSQLConnectString(), c.QueryParam("id"))
+	album, err := model.GetAlbumById(util.GetSQLConnectString(), id)
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
+	}
+	return c.JSON(http.StatusOK, album)
+}
+
+// @Tags         Album
+// @Description getAlbumsByKindId load
+// @Param kindId query string true "string valid"
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /getAlbumsByKindId [get]
+func getAlbumsByKindId(c echo.Context) error {
+	id := c.QueryParam("kindId")
+	if id == "" || len(id) > 20 {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: "parameter empty or not in scope",
+		}
+	}
+	_, err := strconv.Atoi(id)
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: "id only allow number",
+		}
+	}
+	album, err := model.GetAlbumsByKindId(util.GetSQLConnectString(), id)
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,

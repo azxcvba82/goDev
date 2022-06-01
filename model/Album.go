@@ -113,3 +113,48 @@ func GetAlbumById(sqlConnectionString string, albumId string) (model Album, err 
 	}
 	return album, nil
 }
+
+func GetAlbumsByKindId(sqlConnectionString string, kindId string) (model []Album, err error) {
+	var albums []Album
+	nullfActivityID := new(sql.NullInt32)
+	queryString := `SELECT * FROM godev.tAlbum where fkinds LIKE CONCAT('%',(SELECT fKindName FROM godev.tAlbumKind WHERE fKindID = ?),'%'); `
+	rows, err := util.SQLQuery(sqlConnectionString, queryString, kindId)
+
+	if err != nil {
+		return albums, err
+	}
+
+	for rows.Next() {
+		var obj Album
+		var fAlbumID int
+		var fAlbumName string
+		var fMaker string
+		var fAccount string
+		var fYear string
+		var fType int
+		var fStatus int
+		var fALPrice float32
+		var fCoverPath string
+		var fKinds string
+		var fDiscount float32
+		err = rows.Scan(&fAlbumID, &fAlbumName, &fMaker, &fAccount, &fYear, &fType, &fStatus, &fALPrice, &fCoverPath, &fKinds, &fDiscount, nullfActivityID)
+
+		util.CheckErr(err)
+		if nullfActivityID.Valid {
+			obj.ActivityID = int(nullfActivityID.Int32)
+		}
+		obj.AlbumID = fAlbumID
+		obj.AlbumName = fAlbumName
+		obj.Maker = fMaker
+		obj.Account = fAccount
+		obj.Year = fYear
+		obj.Type = fType
+		obj.Status = fStatus
+		obj.ALPrice = fALPrice
+		obj.CoverPath = fCoverPath
+		obj.Kinds = fKinds
+		obj.Discount = fDiscount
+		albums = append(albums, obj)
+	}
+	return albums, nil
+}

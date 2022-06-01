@@ -50,6 +50,22 @@ paths:
           description: error
       tags:
       - Album
+  /getAlbumsByKindId:
+    get:
+      description: getAlbumsByKindId load
+      parameters:
+      - description: string valid
+        in: query
+        name: kindId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Album
   /login:
     post:
       consumes:

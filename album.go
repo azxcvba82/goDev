@@ -30,6 +30,7 @@ func getAlbumById(c echo.Context) error {
 			Message: "id only allow number",
 		}
 	}
+
 	album, err := model.GetAlbumById(util.GetSQLConnectString(), id)
 	if err != nil {
 		return &echo.HTTPError{

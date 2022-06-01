@@ -81,6 +81,7 @@
                 }
             }
         },
+
         "/getAlbumsByKindId": {
             "get": {
                 "description": "getAlbumsByKindId load",

@@ -115,6 +115,7 @@ const docTemplate = `{
                 }
             }
         },
+
         "/login": {
             "post": {
                 "description": "login user",

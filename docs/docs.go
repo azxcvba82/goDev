@@ -115,7 +115,56 @@ const docTemplate = `{
                 }
             }
         },
-
+        "/getProductsByAlbumId": {
+            "get": {
+                "description": "getProductsByAlbumId load",
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "string valid",
+                        "name": "albumId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/getProductsByProductName": {
+            "get": {
+                "description": "getProductsByProductName load",
+                "tags": [
+                    "Search"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "string valid",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "login user",

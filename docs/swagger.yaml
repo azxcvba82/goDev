@@ -66,6 +66,39 @@ paths:
           description: error
       tags:
       - Album
+
+  /getProductsByAlbumId:
+    get:
+      description: getProductsByAlbumId load
+      parameters:
+      - description: string valid
+        in: query
+        name: albumId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Album
+  /getProductsByProductName:
+    get:
+      description: getProductsByProductName load
+      parameters:
+      - description: string valid
+        in: query
+        name: name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Search
   /login:
     post:
       consumes:

@@ -117,13 +117,14 @@ func GetAlbumById(sqlConnectionString string, albumId string) (model Album, err 
 func GetAlbumsByKindId(sqlConnectionString string, kindId string) (model []Album, err error) {
 	var albums []Album
 	nullfActivityID := new(sql.NullInt32)
-	queryString := `SELECT * FROM godev.tAlbum where fkinds LIKE CONCAT('%',(SELECT fKindName FROM godev.tAlbumKind WHERE fKindID = ?),'%'); `
+	queryString := `SELECT * FROM tAlbum where fStatus = 2 AND fkinds LIKE CONCAT('%',(SELECT fKindName FROM tAlbumKind WHERE fKindID = ?),'%') ORDER BY fYear DESC; `
 	rows, err := util.SQLQuery(sqlConnectionString, queryString, kindId)
 
 	if err != nil {
 		return albums, err
 	}
 
+	counter := 0
 	for rows.Next() {
 		var obj Album
 		var fAlbumID int
@@ -155,6 +156,10 @@ func GetAlbumsByKindId(sqlConnectionString string, kindId string) (model []Album
 		obj.Kinds = fKinds
 		obj.Discount = fDiscount
 		albums = append(albums, obj)
+		counter++
+	}
+	if counter == 0 {
+		return albums, errors.New("select id not found")
 	}
 	return albums, nil
 }

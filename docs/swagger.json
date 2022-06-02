@@ -106,6 +106,7 @@
                 }
             }
         },
+
         "/getProductsByAlbumId": {
             "get": {
                 "description": "getProductsByAlbumId load",

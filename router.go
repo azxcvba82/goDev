@@ -24,6 +24,7 @@ func newRouter() *echo.Echo {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
+
 	e.GET("/mainActivities", mainActivities)                     // GET /mainActivities
 	e.GET("/mainAlbums", mainAlbums)                             // GET /mainAlbums
 	e.GET("/getAlbumById", getAlbumById)                         // GET /getAlbumById

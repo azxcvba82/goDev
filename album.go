@@ -63,6 +63,7 @@ func getAlbumsByKindId(c echo.Context) error {
 		}
 	}
 	album, err := model.GetAlbumsByKindId(util.GetSQLConnectString(), id)
+  
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -94,6 +95,7 @@ func getProductsByAlbumId(c echo.Context) error {
 		}
 	}
 	album, err := model.GetProductsByAlbumId(util.GetSQLConnectString(), id)
+  
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,

@@ -31,3 +31,19 @@ func getProductsByProductName(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, item)
 }
+
+// @Tags         Search
+// @Description allAlbumType load
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /allAlbumType [get]
+func allAlbumType(c echo.Context) error {
+	item, err := model.AllAlbumType(util.GetSQLConnectString())
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
+	}
+	return c.JSON(http.StatusOK, item)
+}

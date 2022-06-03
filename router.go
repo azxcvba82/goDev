@@ -31,7 +31,8 @@ func newRouter() *echo.Echo {
 	e.GET("/getProductsByAlbumId", getProductsByAlbumId)         // GET /getProductsByAlbumId
 	e.GET("/getProductsByProductName", getProductsByProductName) // GET /getProductsByProductName
 
-	e.GET("/allkind", allkind) // GET /allkind
+	e.GET("/allkind", allkind)           // GET /allkind
+	e.GET("/allAlbumType", allAlbumType) // GET /allAlbumType
 
 	e.POST("/signup", signup) // POST /signup
 	e.POST("/login", login)   // POST /login

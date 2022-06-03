@@ -4,6 +4,16 @@ info:
   title: Swagger API
   version: "1.0"
 paths:
+  /allAlbumType:
+    get:
+      description: allAlbumType load
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Search
   /allkind:
     get:
       description: allkind load

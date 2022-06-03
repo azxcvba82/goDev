@@ -24,15 +24,6 @@ func newRouter() *echo.Echo {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-
-	e.GET("/mainActivities", mainActivities)                     // GET /mainActivities
-	e.GET("/mainAlbums", mainAlbums)                             // GET /mainAlbums
-	e.GET("/getAlbumById", getAlbumById)                         // GET /getAlbumById
-	e.GET("/getAlbumsByKindId", getAlbumsByKindId)               // GET /getAlbumsByKindId
-	e.GET("/getProductsByAlbumId", getProductsByAlbumId)         // GET /getProductsByAlbumId
-	e.GET("/getProductsByProductName", getProductsByProductName) // GET /getProductsByProductName
-
-
 	e.GET("/mainActivities", mainActivities)                     // GET /mainActivities
 	e.GET("/mainAlbums", mainAlbums)                             // GET /mainAlbums
 	e.GET("/getAlbumById", getAlbumById)                         // GET /getAlbumById
@@ -54,7 +45,8 @@ func newRouter() *echo.Echo {
 	}))
 
 	api.GET("", getAccountFromJWT)
-	api.GET("/getAccountFromJWT", getAccountFromJWT) // GET /api/getAccountFromJWT
+	api.GET("/getAccountFromJWT", getAccountFromJWT)               // GET /api/getAccountFromJWT
+	api.GET("/getShoppingCartByAccount", getShoppingCartByAccount) // GET /api/getShoppingCartByAccount
 
 	return e
 }

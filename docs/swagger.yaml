@@ -44,6 +44,18 @@ paths:
       - securityDefinitions.apikey ApiKeyAuth: []
       tags:
       - Token
+  /api/getShoppingCartByAccount:
+    get:
+      description: getShoppingCartByAccount load
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      security:
+      - securityDefinitions.apikey ApiKeyAuth: []
+      tags:
+      - ShoppingCart
   /getAlbumById:
     get:
       description: getAlbumById load
@@ -76,7 +88,6 @@ paths:
           description: error
       tags:
       - Album
-
   /getProductsByAlbumId:
     get:
       description: getProductsByAlbumId load

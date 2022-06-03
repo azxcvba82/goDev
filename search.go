@@ -47,3 +47,4 @@ func allAlbumType(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, item)
 }
+

@@ -43,7 +43,10 @@
             "get": {
                 "security": [
                     {
-                        "securityDefinitions.apikey ApiKeyAuth": []
+                        "securityDefinitions.apikey BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
                     }
                 ],
                 "description": "getAccountFromJWT",
@@ -76,7 +79,10 @@
             "get": {
                 "security": [
                     {
-                        "securityDefinitions.apikey ApiKeyAuth": []
+                        "securityDefinitions.apikey BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
                     }
                 ],
                 "description": "getShoppingCartByAccount load",
@@ -287,7 +293,7 @@
         }
     },
     "securityDefinitions": {
-        "ApiKeyAuth": {
+        "BearerAuth": {
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"

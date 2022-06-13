@@ -52,7 +52,10 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "securityDefinitions.apikey ApiKeyAuth": []
+                        "securityDefinitions.apikey BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
                     }
                 ],
                 "description": "getAccountFromJWT",
@@ -85,7 +88,10 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "securityDefinitions.apikey ApiKeyAuth": []
+                        "securityDefinitions.apikey BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
                     }
                 ],
                 "description": "getShoppingCartByAccount load",
@@ -296,7 +302,7 @@ const docTemplate = `{
         }
     },
     "securityDefinitions": {
-        "ApiKeyAuth": {
+        "BearerAuth": {
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"

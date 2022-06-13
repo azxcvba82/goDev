@@ -7,7 +7,7 @@ import (
 // @title           Swagger API
 // @version         1.0
 // @description     This is a api web server.
-// @securityDefinitions.apikey ApiKeyAuth
+// @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
 func main() {

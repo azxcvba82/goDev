@@ -41,7 +41,8 @@ paths:
         "500":
           description: error
       security:
-      - securityDefinitions.apikey ApiKeyAuth: []
+      - securityDefinitions.apikey BearerAuth: []
+      - BearerAuth: []
       tags:
       - Token
   /api/getShoppingCartByAccount:
@@ -53,7 +54,8 @@ paths:
         "500":
           description: error
       security:
-      - securityDefinitions.apikey ApiKeyAuth: []
+      - securityDefinitions.apikey BearerAuth: []
+      - BearerAuth: []
       tags:
       - ShoppingCart
   /getAlbumById:
@@ -179,7 +181,7 @@ paths:
       tags:
       - Token
 securityDefinitions:
-  ApiKeyAuth:
+  BearerAuth:
     in: header
     name: Authorization
     type: apiKey

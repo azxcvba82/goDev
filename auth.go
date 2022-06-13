@@ -44,12 +44,12 @@ func login(c echo.Context) error {
 			Message: "invalid name or password",
 		}
 	}
-
+	expiresTime := time.Now().UTC().Add(time.Hour * 6)
 	claims := &jwtCustomClaims{
 		user.Account,
 		user.Email,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+			ExpiresAt: expiresTime.Unix(),
 		},
 	}
 
@@ -60,7 +60,9 @@ func login(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]string{
-		"token": t,
+		"account":   user.Account,
+		"token":     t,
+		"expiresAt": expiresTime.Format(time.RFC1123),
 	})
 }
 
@@ -108,7 +110,8 @@ func signup(c echo.Context) error {
 // @Success 200 "ok"
 // @Failure 500 "error"
 // @Router /api/getAccountFromJWT [get]
-// @security securityDefinitions.apikey ApiKeyAuth
+// @security securityDefinitions.apikey BearerAuth
+// @security BearerAuth
 func getAccountFromJWT(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*jwtCustomClaims)

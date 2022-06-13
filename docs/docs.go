@@ -92,6 +92,7 @@ const docTemplate = `{
                     },
                     {
                         "BearerAuth": []
+
                     }
                 ],
                 "description": "getShoppingCartByAccount load",

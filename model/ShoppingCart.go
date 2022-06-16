@@ -35,14 +35,21 @@ type ShoppingCartList struct {
 	IsAlbum        int     `int:"IsAlbum"`
 	Discount       float32 `float32:"Discount"`
 	Type           int     `int:"Type"`
+	CoverPath      string  `string:"CoverPath"`
+	ProductName    string  `string:"ProductName"`
+	AlbumName      string  `string:"AlbumName"`
+	ALPrice        float32 `string:"ALPrice"`
+	ALDiscount     float32 `string:"ALDiscount"`
 }
 
 func GetShoppingCartByAccount(sqlConnectionString string, account string) (model []ShoppingCartList, err error) {
 	var shoppingCarts []ShoppingCartList
 	nullfQuanity := new(sql.NullInt32)
 	nullfDiscount := new(sql.NullFloat64)
-	queryString := ` SELECT P.*, S.fType  FROM tPurchaseItem P
+	queryString := ` SELECT P.*, S.fType, A.fCoverPath, I.fProductName, A.fAlbumName, A.fALPrice, A.fDiscount  FROM tPurchaseItem P
 	INNER JOIN tShoppingCart S ON P.fPurchaseItemID = S.fCartID
+	LEFT JOIN tProducts I ON P.fProductID = I.fProductID
+	LEFT JOIN tAlbum A ON I.fAlbumID = A.fAlbumID
 	WHERE P.fCustomer = ? AND S.fType = 0 `
 	rows, err := util.SQLQuery(sqlConnectionString, queryString, account)
 
@@ -60,7 +67,12 @@ func GetShoppingCartByAccount(sqlConnectionString string, account string) (model
 		var fPrice float32
 		var fisAlbum int
 		var fType int
-		err = rows.Scan(&fPurchaseItemID, &fCustomer, &fProductID, &fDate, &fPrice, nullfQuanity, &fisAlbum, nullfDiscount, &fType)
+		var fCoverPath string
+		var fProductName string
+		var fAlbumName string
+		var fALPrice float32
+		var fALDiscount float32
+		err = rows.Scan(&fPurchaseItemID, &fCustomer, &fProductID, &fDate, &fPrice, nullfQuanity, &fisAlbum, nullfDiscount, &fType, &fCoverPath, &fProductName, &fAlbumName, &fALPrice, &fALDiscount)
 
 		if nullfQuanity.Valid {
 			obj.Quanity = int(nullfQuanity.Int32)
@@ -78,6 +90,11 @@ func GetShoppingCartByAccount(sqlConnectionString string, account string) (model
 		obj.Price = fPrice
 		obj.IsAlbum = fisAlbum
 		obj.Type = fType
+		obj.CoverPath = fCoverPath
+		obj.ProductName = fProductName
+		obj.AlbumName = fAlbumName
+		obj.ALPrice = fALPrice
+		obj.ALDiscount = fALDiscount
 		shoppingCarts = append(shoppingCarts, obj)
 		counter++
 	}

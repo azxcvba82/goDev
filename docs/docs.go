@@ -195,8 +195,13 @@ const docTemplate = `{
                         "type": "string",
                         "description": "string valid",
                         "name": "name",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "string valid",
+                        "name": "albumName",
+                        "in": "query"
                     }
                 ],
                 "responses": {

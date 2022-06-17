@@ -58,6 +58,7 @@ paths:
       - BearerAuth: []
       tags:
       - ShoppingCart
+
   /getAlbumById:
     get:
       description: getAlbumById load
@@ -113,7 +114,10 @@ paths:
       - description: string valid
         in: query
         name: name
-        required: true
+        type: string
+      - description: string valid
+        in: query
+        name: albumName
         type: string
       responses:
         "200":

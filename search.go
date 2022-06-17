@@ -10,19 +10,31 @@ import (
 
 // @Tags         Search
 // @Description getProductsByProductName load
-// @Param name query string true "string valid"
+// @Param name query string false "string valid"
+// @Param albumName query string false "string valid"
 // @Success 200 "ok"
 // @Failure 500 "error"
 // @Router /getProductsByProductName [get]
 func getProductsByProductName(c echo.Context) error {
-	id := c.QueryParam("name")
-	if id == "" || len(id) > 40 {
+	name := c.QueryParam("name")
+	albumName := c.QueryParam("albumName")
+	singer := c.QueryParam("singer")
+	group := c.QueryParam("group")
+	composer := c.QueryParam("composer")
+	albumType := c.QueryParam("type")
+	if len(name) > 40 {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
 			Message: "parameter empty or not in scope",
 		}
 	}
-	item, err := model.GetProductsByProductName(util.GetSQLConnectString(), id)
+	if name == "" && albumName == "" && singer == "" && group == "" && composer == "" && albumType == "" {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: "parameter empty or not in scope",
+		}
+	}
+	item, err := model.GetProductsByProductName(util.GetSQLConnectString(), c)
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -47,4 +59,3 @@ func allAlbumType(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, item)
 }
-

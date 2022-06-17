@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"main/util"
+
+	"github.com/labstack/echo/v4"
 )
 
 type Product struct {
@@ -32,6 +34,15 @@ type ProductSearch struct {
 	CoverPath   string  `string:"CoverPath"`
 	ActivityID  int     `int:"ActivityID"`
 	Discount    float32 `float32:"Discount"`
+}
+
+type SearchOption struct {
+	ProductName string `string:"productName"`
+	AlbumName   string `string:"AlbumName"`
+	Singer      string `string:"Singer"`
+	Group       string `string:"Group"`
+	Composer    string `string:"Composer"`
+	Type        string `string:"Type"`
 }
 
 func GetProductsByAlbumId(sqlConnectionString string, albumId string) (model []Product, err error) {
@@ -80,15 +91,44 @@ func GetProductsByAlbumId(sqlConnectionString string, albumId string) (model []P
 	return products, nil
 }
 
-func GetProductsByProductName(sqlConnectionString string, name string) (model []ProductSearch, err error) {
+func GetProductsByProductName(sqlConnectionString string, c echo.Context) (model []ProductSearch, err error) {
+	name := c.QueryParam("name")
+	albumName := c.QueryParam("albumName")
+	singer := c.QueryParam("singer")
+	group := c.QueryParam("group")
+	composer := c.QueryParam("composer")
+	albumType := c.QueryParam("type")
+	var option SearchOption
+	option.ProductName = name
+	option.AlbumName = albumName
+	option.Singer = singer
+	option.Group = group
+	option.Composer = composer
+	option.Type = albumType
+
+	sb := ""
+	var querySlice []any
+	if option.ProductName != "" {
+		sb += " fProductName LIKE CONCAT('%',?,'%') "
+		querySlice = append(querySlice, option.ProductName)
+	}
+
+	if option.AlbumName != "" {
+		if len(sb) == 0 {
+			sb += ` A.fAlbumName LIKE CONCAT('%',?,'%')`
+		} else {
+			sb += ` AND A.fAlbumName LIKE CONCAT('%',?,'%')`
+		}
+		querySlice = append(querySlice, option.AlbumName)
+	}
+
 	var products []ProductSearch
 	nullfSinger := new(sql.NullString)
 	nullfComposer := new(sql.NullString)
 	nullfActivityID := new(sql.NullInt32)
 	queryString := `SELECT P.*, A.fAlbumName, A.fCoverPath, A.fActivityID, A.fDiscount FROM tProducts P
-	INNER JOIN godev.tAlbum A ON P.fAlbumID = A.fAlbumID
-	WHERE fProductName LIKE CONCAT('%',?,'%') `
-	rows, err := util.SQLQuery(sqlConnectionString, queryString, name)
+	INNER JOIN godev.tAlbum A ON P.fAlbumID = A.fAlbumID WHERE ` + sb
+	rows, err := util.SQLQuery(sqlConnectionString, queryString, querySlice...)
 
 	if err != nil {
 		return products, err

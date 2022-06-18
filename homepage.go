@@ -14,7 +14,7 @@ import (
 // @Failure 500 "error"
 // @Router /mainActivities [get]
 func mainActivities(c echo.Context) error {
-	event, err := model.EventQuery(util.GetSQLConnectString(), "")
+	event, err := model.EventQuery(util.GetSQLConnectStringRead(), "")
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -30,7 +30,7 @@ func mainActivities(c echo.Context) error {
 // @Failure 500 "error"
 // @Router /mainAlbums [get]
 func mainAlbums(c echo.Context) error {
-	album, err := model.AllAlbum(util.GetSQLConnectString())
+	album, err := model.AllAlbum(util.GetSQLConnectStringRead())
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,

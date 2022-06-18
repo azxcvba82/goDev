@@ -22,6 +22,12 @@ spec:
               name: sql-config
               key: sqlconnectstring
               optional: false
+        - name: SQLCONNECTSTRINGREAD
+          valueFrom:
+            secretKeyRef:
+              name: sql-config
+              key: sqlconnectstringread
+              optional: false
         - name: GITHUBHASHVALUE
           value: ${{ github.sha }}
 

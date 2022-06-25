@@ -47,6 +47,7 @@ func newRouter() *echo.Echo {
 	api.GET("", getAccountFromJWT)
 	api.GET("/getAccountFromJWT", getAccountFromJWT)               // GET /api/getAccountFromJWT
 	api.GET("/getShoppingCartByAccount", getShoppingCartByAccount) // GET /api/getShoppingCartByAccount
+	api.GET("/getPlayListByAccount", getPlayListByAccount)         // GET /api/getPlayListByAccount
 
 	return e
 }

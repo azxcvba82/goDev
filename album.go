@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 )
 
@@ -63,7 +64,7 @@ func getAlbumsByKindId(c echo.Context) error {
 		}
 	}
 	album, err := model.GetAlbumsByKindId(util.GetSQLConnectString(), id)
-  
+
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -95,7 +96,7 @@ func getProductsByAlbumId(c echo.Context) error {
 		}
 	}
 	album, err := model.GetProductsByAlbumId(util.GetSQLConnectString(), id)
-  
+
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -103,4 +104,27 @@ func getProductsByAlbumId(c echo.Context) error {
 		}
 	}
 	return c.JSON(http.StatusOK, album)
+}
+
+// @Tags         Album
+// @Description getPlayListByAccount load
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /api/getPlayListByAccount [get]
+// @security securityDefinitions.apikey BearerAuth
+// @security BearerAuth
+func getPlayListByAccount(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*jwtCustomClaims)
+	account := claims.Account
+
+	product, err := model.GetPlayListByAccount(util.GetSQLConnectString(), account)
+
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
+	}
+	return c.JSON(http.StatusOK, product)
 }

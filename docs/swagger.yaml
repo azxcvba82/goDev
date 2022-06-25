@@ -45,9 +45,9 @@ paths:
       - BearerAuth: []
       tags:
       - Token
-  /api/getShoppingCartByAccount:
+  /api/getPlayListByAccount:
     get:
-      description: getShoppingCartByAccount load
+      description: getPlayListByAccount load
       responses:
         "200":
           description: ok
@@ -57,8 +57,7 @@ paths:
       - securityDefinitions.apikey BearerAuth: []
       - BearerAuth: []
       tags:
-      - ShoppingCart
-
+      - Album
   /getAlbumById:
     get:
       description: getAlbumById load

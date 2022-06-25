@@ -15,7 +15,7 @@ func GetPlayListByAccount(sqlConnectionString string, account string) (model []P
 	playList := []ProductSearch{}
 	nullfSinger := new(sql.NullString)
 	nullfComposer := new(sql.NullString)
-	queryString := `SELECT P.*, A.fAlbumName  FROM tPlayLists L
+	queryString := `SELECT P.*, A.fAlbumName, A.fCoverPath  FROM tPlayLists L
 									INNER JOIN tProducts P ON L.fProductID = P.fProductID
 									INNER JOIN tAlbum A ON P.fAlbumID = A.fAlbumID
 									WHERE L.fAccount = ? `
@@ -36,7 +36,8 @@ func GetPlayListByAccount(sqlConnectionString string, account string) (model []P
 		var fPlayStart float32
 		var fPlayEnd float32
 		var fAlbumName string
-		err = rows.Scan(&fProductID, &fAlbumID, &fProductName, nullfSinger, &fSIPrice, nullfComposer, &fFilePath, &fPlayStart, &fPlayEnd, &fAlbumName)
+		var fCoverPath string
+		err = rows.Scan(&fProductID, &fAlbumID, &fProductName, nullfSinger, &fSIPrice, nullfComposer, &fFilePath, &fPlayStart, &fPlayEnd, &fAlbumName, &fCoverPath)
 
 		util.CheckErr(err)
 		if nullfSinger.Valid {
@@ -53,6 +54,7 @@ func GetPlayListByAccount(sqlConnectionString string, account string) (model []P
 		obj.PlayStart = fPlayStart
 		obj.PlayEnd = fPlayEnd
 		obj.AlbumName = fAlbumName
+		obj.CoverPath = fCoverPath
 		playList = append(playList, obj)
 		counter++
 	}

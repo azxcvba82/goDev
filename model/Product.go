@@ -215,3 +215,48 @@ func GetProductsByProductName(sqlConnectionString string, c echo.Context) (model
 	}
 	return products, nil
 }
+
+func GetProductById(sqlConnectionString string, id string) (model Product, err error) {
+	var obj Product
+	nullfSinger := new(sql.NullString)
+	nullfComposer := new(sql.NullString)
+	queryString := `SELECT * FROM tProducts where fProductID = ? `
+	rows, err := util.SQLQuery(sqlConnectionString, queryString, id)
+
+	if err != nil {
+		return obj, err
+	}
+
+	counter := 0
+	for rows.Next() {
+
+		var fProductID int
+		var fProductName string
+		var fAlbumID int
+		var fSIPrice float32
+		var fFilePath string
+		var fPlayStart float32
+		var fPlayEnd float32
+		err = rows.Scan(&fProductID, &fAlbumID, &fProductName, nullfSinger, &fSIPrice, nullfComposer, &fFilePath, &fPlayStart, &fPlayEnd)
+
+		util.CheckErr(err)
+		if nullfSinger.Valid {
+			obj.Singer = string(nullfSinger.String)
+		}
+		if nullfComposer.Valid {
+			obj.Composer = string(nullfComposer.String)
+		}
+		obj.ProductID = fProductID
+		obj.ProductName = fProductName
+		obj.AlbumID = fAlbumID
+		obj.SIPrice = fSIPrice
+		obj.FilePath = fFilePath
+		obj.PlayStart = fPlayStart
+		obj.PlayEnd = fPlayEnd
+		counter++
+	}
+	if counter == 0 {
+		return obj, errors.New("select id not found")
+	}
+	return obj, nil
+}

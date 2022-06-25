@@ -24,6 +24,44 @@ paths:
           description: error
       tags:
       - Kind
+  /api/addPlayLists:
+    get:
+      description: addPlayLists load
+      parameters:
+      - description: string valid
+        in: query
+        name: productId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      security:
+      - securityDefinitions.apikey BearerAuth: []
+      - BearerAuth: []
+      tags:
+      - Album
+  /api/deletePlayLists:
+    get:
+      description: deletePlayLists load
+      parameters:
+      - description: string valid
+        in: query
+        name: productId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      security:
+      - securityDefinitions.apikey BearerAuth: []
+      - BearerAuth: []
+      tags:
+      - Album
   /api/getAccountFromJWT:
     get:
       consumes:
@@ -113,10 +151,6 @@ paths:
       - description: string valid
         in: query
         name: name
-        type: string
-      - description: string valid
-        in: query
-        name: albumName
         type: string
       - description: string valid
         in: query

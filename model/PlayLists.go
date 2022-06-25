@@ -2,7 +2,9 @@ package model
 
 import (
 	"database/sql"
+	"errors"
 	"main/util"
+	"strconv"
 )
 
 type PlayList struct {
@@ -61,4 +63,58 @@ func GetPlayListByAccount(sqlConnectionString string, account string) (model []P
 		counter++
 	}
 	return playList, nil
+}
+
+func UserAddPlayLists(sqlConnectionString string, account string, productId string) (result int64, err error) {
+	prod, err := GetProductById(util.GetSQLConnectStringRead(), productId)
+
+	if err != nil {
+		outputErr := errors.New("product not found")
+		return -1, outputErr
+	}
+
+	prods, err := GetPlayListByAccount(util.GetSQLConnectStringRead(), account)
+
+	_ = prod
+
+	num, _ := strconv.Atoi(productId)
+	for i := 0; i < len(prods); i++ {
+		if prods[i].ProductID == num {
+			return -1, errors.New("product exist")
+		}
+	}
+
+	queryString := `INSERT INTO tPlayLists (fAccount, fProductID) VALUES (?,?)`
+	row, err := util.SQLExec(sqlConnectionString, queryString, account, productId)
+	if err != nil {
+		return -1, err
+	}
+
+	return row, nil
+}
+
+func UserDeletePlayLists(sqlConnectionString string, account string, productId string) (result int64, err error) {
+	prods, err := GetPlayListByAccount(util.GetSQLConnectStringRead(), account)
+
+	exist := false
+
+	num, _ := strconv.Atoi(productId)
+	for i := 0; i < len(prods); i++ {
+		if prods[i].ProductID == num {
+			exist = true
+			break
+		}
+	}
+
+	if exist == true {
+		queryString := `DELETE FROM tPlayLists WHERE fAccount = ? AND fProductID = ? `
+		row, err := util.SQLExec(sqlConnectionString, queryString, account, productId)
+		if err != nil {
+			return -1, err
+		}
+		return row, nil
+	} else {
+		return -1, errors.New("product not exist in account")
+	}
+
 }

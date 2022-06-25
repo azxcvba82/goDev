@@ -45,6 +45,19 @@ paths:
       - BearerAuth: []
       tags:
       - Token
+  /api/getPlayListByAccount:
+    get:
+      description: getPlayListByAccount load
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      security:
+      - securityDefinitions.apikey BearerAuth: []
+      - BearerAuth: []
+      tags:
+      - Album
   /getAlbumById:
     get:
       description: getAlbumById load

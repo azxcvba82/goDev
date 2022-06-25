@@ -84,6 +84,30 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/getPlayListByAccount": {
+            "get": {
+                "security": [
+                    {
+                        "securityDefinitions.apikey BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "getPlayListByAccount load",
+                "tags": [
+                    "Album"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
         "/getAlbumById": {
             "get": {
                 "description": "getAlbumById load",

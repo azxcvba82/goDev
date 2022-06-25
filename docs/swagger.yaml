@@ -120,6 +120,10 @@ paths:
         type: string
       - description: string valid
         in: query
+        name: albumName
+        type: string
+      - description: string valid
+        in: query
         name: singer
         type: string
       - description: string valid

@@ -11,12 +11,13 @@ type PlayList struct {
 	ProductId int    `int:"AlbumID"`
 }
 
-func GetPlayListByAccount(sqlConnectionString string, account string) (model []Product, err error) {
-	playList := []Product{}
+func GetPlayListByAccount(sqlConnectionString string, account string) (model []ProductSearch, err error) {
+	playList := []ProductSearch{}
 	nullfSinger := new(sql.NullString)
 	nullfComposer := new(sql.NullString)
-	queryString := `SELECT P.*  FROM tPlayLists L
+	queryString := `SELECT P.*, A.fAlbumName  FROM tPlayLists L
 									INNER JOIN tProducts P ON L.fProductID = P.fProductID
+									INNER JOIN tAlbum A ON P.fAlbumID = A.fAlbumID
 									WHERE L.fAccount = ? `
 	rows, err := util.SQLQuery(sqlConnectionString, queryString, account)
 
@@ -26,7 +27,7 @@ func GetPlayListByAccount(sqlConnectionString string, account string) (model []P
 
 	counter := 0
 	for rows.Next() {
-		var obj Product
+		var obj ProductSearch
 		var fProductID int
 		var fProductName string
 		var fAlbumID int
@@ -34,7 +35,8 @@ func GetPlayListByAccount(sqlConnectionString string, account string) (model []P
 		var fFilePath string
 		var fPlayStart float32
 		var fPlayEnd float32
-		err = rows.Scan(&fProductID, &fAlbumID, &fProductName, nullfSinger, &fSIPrice, nullfComposer, &fFilePath, &fPlayStart, &fPlayEnd)
+		var fAlbumName string
+		err = rows.Scan(&fProductID, &fAlbumID, &fProductName, nullfSinger, &fSIPrice, nullfComposer, &fFilePath, &fPlayStart, &fPlayEnd, &fAlbumName)
 
 		util.CheckErr(err)
 		if nullfSinger.Valid {
@@ -50,6 +52,7 @@ func GetPlayListByAccount(sqlConnectionString string, account string) (model []P
 		obj.FilePath = fFilePath
 		obj.PlayStart = fPlayStart
 		obj.PlayEnd = fPlayEnd
+		obj.AlbumName = fAlbumName
 		playList = append(playList, obj)
 		counter++
 	}

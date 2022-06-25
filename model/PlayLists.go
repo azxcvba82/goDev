@@ -12,7 +12,7 @@ type PlayList struct {
 }
 
 func GetPlayListByAccount(sqlConnectionString string, account string) (model []Product, err error) {
-	var playList []Product
+	playList := []Product{}
 	nullfSinger := new(sql.NullString)
 	nullfComposer := new(sql.NullString)
 	queryString := `SELECT P.*  FROM tPlayLists L

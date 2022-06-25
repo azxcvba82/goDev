@@ -119,6 +119,26 @@ paths:
         in: query
         name: albumName
         type: string
+      - description: string valid
+        in: query
+        name: albumName
+        type: string
+      - description: string valid
+        in: query
+        name: singer
+        type: string
+      - description: string valid
+        in: query
+        name: group
+        type: string
+      - description: string valid
+        in: query
+        name: composer
+        type: string
+      - description: int valid
+        in: query
+        name: type
+        type: integer
       responses:
         "200":
           description: ok

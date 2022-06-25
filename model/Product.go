@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"main/util"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -120,6 +121,43 @@ func GetProductsByProductName(sqlConnectionString string, c echo.Context) (model
 			sb += ` AND A.fAlbumName LIKE CONCAT('%',?,'%')`
 		}
 		querySlice = append(querySlice, option.AlbumName)
+	}
+
+	if option.Singer != "" {
+		if len(sb) == 0 {
+			sb += ` fSinger LIKE CONCAT('%',?,'%')`
+		} else {
+			sb += ` AND fSinger LIKE CONCAT('%',?,'%')`
+		}
+		querySlice = append(querySlice, option.Singer)
+	}
+
+	if option.Group != "" {
+		if len(sb) == 0 {
+			sb += ` A.fMaker LIKE CONCAT('%',?,'%')`
+		} else {
+			sb += ` AND A.fMaker LIKE CONCAT('%',?,'%')`
+		}
+		querySlice = append(querySlice, option.Group)
+	}
+
+	if option.Composer != "" {
+		if len(sb) == 0 {
+			sb += ` fComposer LIKE CONCAT('%',?,'%')`
+		} else {
+			sb += ` AND fComposer LIKE CONCAT('%',?,'%')`
+		}
+		querySlice = append(querySlice, option.Composer)
+	}
+
+	if option.Type != "" {
+		if len(sb) == 0 {
+			sb += ` A.fType = ? `
+		} else {
+			sb += ` AND A.fType  = ? `
+		}
+		typeId, _ := strconv.Atoi(option.Type)
+		querySlice = append(querySlice, typeId)
 	}
 
 	var products []ProductSearch

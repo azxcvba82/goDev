@@ -39,6 +39,7 @@ func GetPlayListByAccount(sqlConnectionString string, account string) (model []P
 		var fCoverPath string
 		err = rows.Scan(&fProductID, &fAlbumID, &fProductName, nullfSinger, &fSIPrice, nullfComposer, &fFilePath, &fPlayStart, &fPlayEnd, &fAlbumName, &fCoverPath)
 
+
 		util.CheckErr(err)
 		if nullfSinger.Valid {
 			obj.Singer = string(nullfSinger.String)
@@ -55,6 +56,7 @@ func GetPlayListByAccount(sqlConnectionString string, account string) (model []P
 		obj.PlayEnd = fPlayEnd
 		obj.AlbumName = fAlbumName
 		obj.CoverPath = fCoverPath
+
 		playList = append(playList, obj)
 		counter++
 	}

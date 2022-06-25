@@ -12,6 +12,10 @@ import (
 // @Description getProductsByProductName load
 // @Param name query string false "string valid"
 // @Param albumName query string false "string valid"
+// @Param singer query string false "string valid"
+// @Param group query string false "string valid"
+// @Param composer query string false "string valid"
+// @Param type query int false "int valid"
 // @Success 200 "ok"
 // @Failure 500 "error"
 // @Router /getProductsByProductName [get]

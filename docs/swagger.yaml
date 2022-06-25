@@ -45,6 +45,20 @@ paths:
       - BearerAuth: []
       tags:
       - Token
+  /api/getShoppingCartByAccount:
+    get:
+      description: getShoppingCartByAccount load
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      security:
+      - securityDefinitions.apikey BearerAuth: []
+      - BearerAuth: []
+      tags:
+      - ShoppingCart
+
   /getAlbumById:
     get:
       description: getAlbumById load
@@ -100,6 +114,10 @@ paths:
       - description: string valid
         in: query
         name: name
+        type: string
+      - description: string valid
+        in: query
+        name: albumName
         type: string
       - description: string valid
         in: query

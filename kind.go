@@ -14,7 +14,7 @@ import (
 // @Failure 500 "error"
 // @Router /allkind [get]
 func allkind(c echo.Context) error {
-	kind, err := model.AllKind(util.GetSQLConnectString())
+	kind, err := model.AllKind(util.GetSQLConnectStringRead())
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,

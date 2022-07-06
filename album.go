@@ -32,7 +32,7 @@ func getAlbumById(c echo.Context) error {
 		}
 	}
 
-	album, err := model.GetAlbumById(util.GetSQLConnectString(), id)
+	album, err := model.GetAlbumById(util.GetSQLConnectStringRead(), id)
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -63,7 +63,7 @@ func getAlbumsByKindId(c echo.Context) error {
 			Message: "id only allow number",
 		}
 	}
-	album, err := model.GetAlbumsByKindId(util.GetSQLConnectString(), id)
+	album, err := model.GetAlbumsByKindId(util.GetSQLConnectStringRead(), id)
 
 	if err != nil {
 		return &echo.HTTPError{
@@ -95,7 +95,7 @@ func getProductsByAlbumId(c echo.Context) error {
 			Message: "id only allow number",
 		}
 	}
-	album, err := model.GetProductsByAlbumId(util.GetSQLConnectString(), id)
+	album, err := model.GetProductsByAlbumId(util.GetSQLConnectStringRead(), id)
 
 	if err != nil {
 		return &echo.HTTPError{
@@ -118,7 +118,7 @@ func getPlayListByAccount(c echo.Context) error {
 	claims := user.Claims.(*jwtCustomClaims)
 	account := claims.Account
 
-	product, err := model.GetPlayListByAccount(util.GetSQLConnectString(), account)
+	product, err := model.GetPlayListByAccount(util.GetSQLConnectStringRead(), account)
 
 	if err != nil {
 		return &echo.HTTPError{

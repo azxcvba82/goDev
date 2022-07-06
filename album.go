@@ -32,7 +32,7 @@ func getAlbumById(c echo.Context) error {
 		}
 	}
 
-	album, err := model.GetAlbumById(util.GetSQLConnectString(), id)
+	album, err := model.GetAlbumById(util.GetSQLConnectStringRead(), id)
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -63,7 +63,7 @@ func getAlbumsByKindId(c echo.Context) error {
 			Message: "id only allow number",
 		}
 	}
-	album, err := model.GetAlbumsByKindId(util.GetSQLConnectString(), id)
+	album, err := model.GetAlbumsByKindId(util.GetSQLConnectStringRead(), id)
 
 	if err != nil {
 		return &echo.HTTPError{
@@ -95,7 +95,7 @@ func getProductsByAlbumId(c echo.Context) error {
 			Message: "id only allow number",
 		}
 	}
-	album, err := model.GetProductsByAlbumId(util.GetSQLConnectString(), id)
+	album, err := model.GetProductsByAlbumId(util.GetSQLConnectStringRead(), id)
 
 	if err != nil {
 		return &echo.HTTPError{
@@ -118,7 +118,57 @@ func getPlayListByAccount(c echo.Context) error {
 	claims := user.Claims.(*jwtCustomClaims)
 	account := claims.Account
 
-	product, err := model.GetPlayListByAccount(util.GetSQLConnectString(), account)
+	product, err := model.GetPlayListByAccount(util.GetSQLConnectStringRead(), account)
+
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
+	}
+	return c.JSON(http.StatusOK, product)
+}
+
+// @Tags         Album
+// @Description addPlayLists load
+// @Param productId query string true "string valid"
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /api/addPlayLists [get]
+// @security securityDefinitions.apikey BearerAuth
+// @security BearerAuth
+func addPlayLists(c echo.Context) error {
+	productId := c.QueryParam("productId")
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*jwtCustomClaims)
+	account := claims.Account
+
+	product, err := model.UserAddPlayLists(util.GetSQLConnectString(), account, productId)
+
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
+	}
+	return c.JSON(http.StatusOK, product)
+}
+
+// @Tags         Album
+// @Description deletePlayLists load
+// @Param productId query string true "string valid"
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /api/deletePlayLists [get]
+// @security securityDefinitions.apikey BearerAuth
+// @security BearerAuth
+func deletePlayLists(c echo.Context) error {
+	productId := c.QueryParam("productId")
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*jwtCustomClaims)
+	account := claims.Account
+
+	product, err := model.UserDeletePlayLists(util.GetSQLConnectString(), account, productId)
 
 	if err != nil {
 		return &echo.HTTPError{

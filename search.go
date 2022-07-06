@@ -38,7 +38,7 @@ func getProductsByProductName(c echo.Context) error {
 			Message: "parameter empty or not in scope",
 		}
 	}
-	item, err := model.GetProductsByProductName(util.GetSQLConnectString(), c)
+	item, err := model.GetProductsByProductName(util.GetSQLConnectStringRead(), c)
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -54,7 +54,7 @@ func getProductsByProductName(c echo.Context) error {
 // @Failure 500 "error"
 // @Router /allAlbumType [get]
 func allAlbumType(c echo.Context) error {
-	item, err := model.AllAlbumType(util.GetSQLConnectString())
+	item, err := model.AllAlbumType(util.GetSQLConnectStringRead())
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,

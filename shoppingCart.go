@@ -22,7 +22,7 @@ func getShoppingCartByAccount(c echo.Context) error {
 	claims := user.Claims.(*jwtCustomClaims)
 	account := claims.Account
 
-	shoppingCart, err := model.GetShoppingCartByAccount(util.GetSQLConnectString(), account)
+	shoppingCart, err := model.GetShoppingCartByAccount(util.GetSQLConnectStringRead(), account)
 
 	if err != nil {
 		return &echo.HTTPError{

@@ -32,7 +32,7 @@ func login(c echo.Context) error {
 			Message: "empty name",
 		}
 	}
-	user, err := model.FindUser(util.GetSQLConnectString(), &model.UserLoginPost{Account: u.Account})
+	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: u.Account})
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -86,7 +86,7 @@ func signup(c echo.Context) error {
 		}
 	}
 
-	u, err := model.FindUser(util.GetSQLConnectString(), &model.UserLoginPost{Account: user.Account})
+	u, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: user.Account})
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusConflict,

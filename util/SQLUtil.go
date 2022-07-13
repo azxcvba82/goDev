@@ -2,10 +2,27 @@ package util
 
 import (
 	"database/sql"
+	"os"
 	"time"
+
+	"github.com/go-redis/redis/v8"
+)
+
+var (
+	rdb *redis.Client
+	db  *sql.DB
 )
 
 func SQLQuery(sqlConnectionString string, sqlCommand string, args ...any) (r *sql.Rows, err error) {
+
+	if rdb == nil {
+		rdb = redis.NewClient(&redis.Options{
+			Addr:     os.Getenv("REDISADDRESS"),
+			Password: os.Getenv("REDISPASSWORD"),
+			DB:       0,
+		})
+	}
+
 	db, err := sql.Open("mysql", sqlConnectionString)
 	if err != nil {
 		return nil, err

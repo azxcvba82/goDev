@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"reflect"
+	"strings"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -28,7 +30,7 @@ func SQLQuery(sqlConnectionString string, sqlCommand string, args ...any) (r *sq
 	return rows, err
 }
 
-func SQLQueryV2(model interface{}, sqlConnectionString string, sqlCommand string, args ...any) (err error) {
+func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sqlCommand string, args ...any) (err error) {
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDISADDRESS"),
@@ -61,7 +63,11 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, sqlCommand string
 		}
 
 		db.SetConnMaxLifetime(time.Minute * 3)
-		db.Select(model, sqlCommand, args...)
+		if strings.Contains(reflect.ValueOf(model).Type().String(), "[]") {
+			db.Select(model, sqlCommand, args...)
+		} else {
+			db.Get(model, sqlCommand, args...)
+		}
 		s, err := json.Marshal(model)
 		//fmt.Println(string(s))
 
@@ -78,7 +84,7 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, sqlCommand string
 			fmt.Println("redis get err:" + err.Error())
 		}
 		json.Unmarshal([]byte(jsonString), model)
-		//fmt.Println("Redis READ")
+		fmt.Println("Redis READ: " + sqlCommand)
 
 		return err
 	}

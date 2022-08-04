@@ -32,6 +32,21 @@ func SQLQuery(sqlConnectionString string, sqlCommand string, args ...any) (r *sq
 
 func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sqlCommand string, args ...any) (err error) {
 
+	db, err := sqlx.Open("mysql", sqlConnectionString)
+	if err != nil {
+		return err
+	}
+	db.SetConnMaxLifetime(time.Minute * 3)
+
+	if useCache == false {
+		if strings.Contains(reflect.ValueOf(model).Type().String(), "[]") {
+			db.Select(model, sqlCommand, args...)
+		} else {
+			db.Get(model, sqlCommand, args...)
+		}
+		return err
+	}
+
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDISADDRESS"),
 		Password: os.Getenv("REDISPASSWORD"),
@@ -55,14 +70,19 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 	//fmt.Println(intExist)
 
 	// key not exist
-	if intExist == 0 {
+	if intExist == 1 {
 
-		db, err := sqlx.Open("mysql", sqlConnectionString)
+		jsonString, err := rdb.Get(ctx, md5Result).Result()
 		if err != nil {
-			return err
+			fmt.Println("redis get err:" + err.Error())
 		}
+		json.Unmarshal([]byte(jsonString), model)
+		fmt.Println("Redis READ: " + sqlCommand)
 
-		db.SetConnMaxLifetime(time.Minute * 3)
+		return err
+
+	} else {
+
 		if strings.Contains(reflect.ValueOf(model).Type().String(), "[]") {
 			db.Select(model, sqlCommand, args...)
 		} else {
@@ -76,16 +96,6 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 		if err != nil {
 			fmt.Println("redis set err:" + err.Error())
 		}
-
-		return err
-
-	} else {
-		jsonString, err := rdb.Get(ctx, md5Result).Result()
-		if err != nil {
-			fmt.Println("redis get err:" + err.Error())
-		}
-		json.Unmarshal([]byte(jsonString), model)
-		fmt.Println("Redis READ: " + sqlCommand)
 
 		return err
 	}

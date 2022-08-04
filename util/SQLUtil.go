@@ -56,6 +56,13 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 	// NO implement cancel require
 	ctx := context.Background()
 
+	var cacheAvailable bool = true
+	_, err = rdb.Ping(ctx).Result()
+	if err != nil {
+		fmt.Println("redis conn err:" + err.Error())
+		cacheAvailable = false
+	}
+
 	var sqlCommandWithArgs = sqlCommand
 	for _, arg := range args {
 		sqlCommandWithArgs += arg.(string)
@@ -66,10 +73,13 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 	md5Result := hex.EncodeToString(md5Inst.Sum([]byte("")))
 	//_, err = rdb.Del(ctx, md5Result).Result()
 
-	intExist, err := rdb.Exists(ctx, md5Result).Result()
+	var intExist int64 = 0
+	if cacheAvailable == true {
+		intExist, err = rdb.Exists(ctx, md5Result).Result()
+	}
 	//fmt.Println(intExist)
 
-	// key not exist
+	// key exist
 	if intExist == 1 {
 
 		jsonString, err := rdb.Get(ctx, md5Result).Result()
@@ -91,10 +101,12 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 		s, err := json.Marshal(model)
 		//fmt.Println(string(s))
 
-		var cacheDuration time.Duration = 86400 * time.Second
-		_, err = rdb.Set(ctx, md5Result, string(s), cacheDuration).Result()
-		if err != nil {
-			fmt.Println("redis set err:" + err.Error())
+		if cacheAvailable == true {
+			var cacheDuration time.Duration = 86400 * time.Second
+			_, err = rdb.Set(ctx, md5Result, string(s), cacheDuration).Result()
+			if err != nil {
+				fmt.Println("redis set err:" + err.Error())
+			}
 		}
 
 		return err

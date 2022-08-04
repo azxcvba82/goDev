@@ -7,18 +7,19 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"gopkg.in/guregu/null.v4"
 )
 
 type Product struct {
-	ProductID   int     `int:"productID"`
-	ProductName string  `string:"productName"`
-	AlbumID     int     `int:"albumID"`
-	Singer      string  `string:"singer"`
-	SIPrice     float32 `float32:"siPrice"`
-	Composer    string  `string:"composer"`
-	FilePath    string  `string:"filePath"`
-	PlayStart   float32 `float32:"playStart"`
-	PlayEnd     float32 `float32:"playEnd"`
+	ProductID   int         `db:"fProductID"`
+	ProductName string      `db:"fProductName"`
+	AlbumID     int         `db:"fAlbumID"`
+	Singer      null.String `db:"fSinger"`
+	SIPrice     float32     `db:"fSIPrice"`
+	Composer    null.String `db:"fComposer"`
+	FilePath    string      `db:"fFilePath"`
+	PlayStart   float32     `db:"fPlayStart"`
+	PlayEnd     float32     `db:"fPlayEnd"`
 }
 
 type ProductSearch struct {
@@ -48,45 +49,14 @@ type SearchOption struct {
 
 func GetProductsByAlbumId(sqlConnectionString string, albumId string) (model []Product, err error) {
 	var products []Product
-	nullfSinger := new(sql.NullString)
-	nullfComposer := new(sql.NullString)
-	queryString := `SELECT * FROM tProducts where fAlbumID = ? `
-	rows, err := util.SQLQuery(sqlConnectionString, queryString, albumId)
+	queryString := `SELECT fProductID, fProductName, fAlbumID, fSinger, fSIPrice, fComposer, fFilePath, fPlayStart, fPlayEnd FROM tProducts where fAlbumID = ? `
+	err = util.SQLQueryV2(&products, sqlConnectionString, true, queryString, albumId)
 
 	if err != nil {
 		return products, err
 	}
 
-	counter := 0
-	for rows.Next() {
-		var obj Product
-		var fProductID int
-		var fProductName string
-		var fAlbumID int
-		var fSIPrice float32
-		var fFilePath string
-		var fPlayStart float32
-		var fPlayEnd float32
-		err = rows.Scan(&fProductID, &fAlbumID, &fProductName, nullfSinger, &fSIPrice, nullfComposer, &fFilePath, &fPlayStart, &fPlayEnd)
-
-		util.CheckErr(err)
-		if nullfSinger.Valid {
-			obj.Singer = string(nullfSinger.String)
-		}
-		if nullfComposer.Valid {
-			obj.Composer = string(nullfComposer.String)
-		}
-		obj.ProductID = fProductID
-		obj.ProductName = fProductName
-		obj.AlbumID = fAlbumID
-		obj.SIPrice = fSIPrice
-		obj.FilePath = fFilePath
-		obj.PlayStart = fPlayStart
-		obj.PlayEnd = fPlayEnd
-		products = append(products, obj)
-		counter++
-	}
-	if counter == 0 {
+	if products == nil {
 		return products, errors.New("select id not found")
 	}
 	return products, nil
@@ -218,44 +188,15 @@ func GetProductsByProductName(sqlConnectionString string, c echo.Context) (model
 
 func GetProductById(sqlConnectionString string, id string) (model Product, err error) {
 	var obj Product
-	nullfSinger := new(sql.NullString)
-	nullfComposer := new(sql.NullString)
-	queryString := `SELECT * FROM tProducts where fProductID = ? `
-	rows, err := util.SQLQuery(sqlConnectionString, queryString, id)
+	queryString := `SELECT fProductID, fProductName, fAlbumID, fSinger, fSIPrice, fComposer, fFilePath, fPlayStart, fPlayEnd FROM tProducts where fProductID = ? `
+	err = util.SQLQueryV2(&obj, sqlConnectionString, true, queryString, id)
 
 	if err != nil {
 		return obj, err
 	}
 
-	counter := 0
-	for rows.Next() {
-
-		var fProductID int
-		var fProductName string
-		var fAlbumID int
-		var fSIPrice float32
-		var fFilePath string
-		var fPlayStart float32
-		var fPlayEnd float32
-		err = rows.Scan(&fProductID, &fAlbumID, &fProductName, nullfSinger, &fSIPrice, nullfComposer, &fFilePath, &fPlayStart, &fPlayEnd)
-
-		util.CheckErr(err)
-		if nullfSinger.Valid {
-			obj.Singer = string(nullfSinger.String)
-		}
-		if nullfComposer.Valid {
-			obj.Composer = string(nullfComposer.String)
-		}
-		obj.ProductID = fProductID
-		obj.ProductName = fProductName
-		obj.AlbumID = fAlbumID
-		obj.SIPrice = fSIPrice
-		obj.FilePath = fFilePath
-		obj.PlayStart = fPlayStart
-		obj.PlayEnd = fPlayEnd
-		counter++
-	}
-	if counter == 0 {
+	var objForCheck Product
+	if obj == objForCheck {
 		return obj, errors.New("select id not found")
 	}
 	return obj, nil

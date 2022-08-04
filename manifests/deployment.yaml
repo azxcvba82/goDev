@@ -28,6 +28,21 @@ spec:
               name: sql-config
               key: sqlconnectstringread
               optional: false
+        - name: REDISPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cache-config
+              key: cachepassword
+              optional: false
+        - name: REDISADDRESS
+          valueFrom:
+            secretKeyRef:
+              name: cache-config
+              key: cacheaddress
+              optional: false
         - name: GITHUBHASHVALUE
           value: ${{ github.sha }}
-
+      tolerations:
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Exists"
+        effect: "NoSchedule"

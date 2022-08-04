@@ -71,7 +71,8 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 		s, err := json.Marshal(model)
 		//fmt.Println(string(s))
 
-		_, err = rdb.Set(ctx, md5Result, string(s), 86400).Result()
+		var cacheDuration time.Duration = 86400 * time.Second
+		_, err = rdb.Set(ctx, md5Result, string(s), cacheDuration).Result()
 		if err != nil {
 			fmt.Println("redis set err:" + err.Error())
 		}

@@ -4,12 +4,14 @@ import (
 	"errors"
 	"fmt"
 	"main/util"
+
+	"gopkg.in/guregu/null.v4"
 )
 
 type UserSignupPost struct {
-	Account  string `string:"account"`
-	Password string `string:"password"`
-	Email    string `string:"email"`
+	Account  string      `db:"fAccount"`
+	Password string      `db:"fPassword"`
+	Email    null.String `db:"fEmail"`
 }
 
 func CreateUser(sqlConnectionString string, u *UserSignupPost) (model UserSignupPost, err error) {

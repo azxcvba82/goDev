@@ -32,15 +32,21 @@ func login(c echo.Context) error {
 			Message: "empty name",
 		}
 	}
+	var userForCheck model.UserLoginPost
 	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: u.Account})
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
 			Message: err.Error(),
 		}
-	} else if user.Account != u.Account || user.Password != u.Password {
+	} else if user == userForCheck {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
+			Message: "user not found",
+		}
+	} else if user.Account != u.Account || user.Password != u.Password {
+		return &echo.HTTPError{
+			Code:    http.StatusUnauthorized,
 			Message: "invalid name or password",
 		}
 	}

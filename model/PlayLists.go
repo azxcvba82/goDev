@@ -1,7 +1,6 @@
 package model
 
 import (
-	"database/sql"
 	"errors"
 	"main/util"
 	"strconv"
@@ -15,53 +14,17 @@ type PlayList struct {
 
 func GetPlayListByAccount(sqlConnectionString string, account string) (model []ProductSearch, err error) {
 	playList := []ProductSearch{}
-	nullfSinger := new(sql.NullString)
-	nullfComposer := new(sql.NullString)
-	queryString := `SELECT P.*, A.fAlbumName, A.fCoverPath  FROM tPlayLists L
+	queryString := `SELECT P.fProductID, P.fProductName, P.fAlbumID, P.fSinger, P.fSIPrice, P.fComposer, P.fFilePath, P.fPlayStart, P.fPlayEnd, 
+									A.fAlbumName, A.fCoverPath  FROM tPlayLists L
 									INNER JOIN tProducts P ON L.fProductID = P.fProductID
 									INNER JOIN tAlbum A ON P.fAlbumID = A.fAlbumID
 									WHERE L.fAccount = ? `
-	rows, err := util.SQLQuery(sqlConnectionString, queryString, account)
+	err = util.SQLQueryV2(&playList, sqlConnectionString, true, queryString, account)
 
 	if err != nil {
 		return playList, err
 	}
 
-	counter := 0
-	for rows.Next() {
-		var obj ProductSearch
-		var fProductID int
-		var fProductName string
-		var fAlbumID int
-		var fSIPrice float32
-		var fFilePath string
-		var fPlayStart float32
-		var fPlayEnd float32
-		var fAlbumName string
-		var fCoverPath string
-		err = rows.Scan(&fProductID, &fAlbumID, &fProductName, nullfSinger, &fSIPrice, nullfComposer, &fFilePath, &fPlayStart, &fPlayEnd, &fAlbumName, &fCoverPath)
-
-
-		util.CheckErr(err)
-		if nullfSinger.Valid {
-			obj.Singer = string(nullfSinger.String)
-		}
-		if nullfComposer.Valid {
-			obj.Composer = string(nullfComposer.String)
-		}
-		obj.ProductID = fProductID
-		obj.ProductName = fProductName
-		obj.AlbumID = fAlbumID
-		obj.SIPrice = fSIPrice
-		obj.FilePath = fFilePath
-		obj.PlayStart = fPlayStart
-		obj.PlayEnd = fPlayEnd
-		obj.AlbumName = fAlbumName
-		obj.CoverPath = fCoverPath
-
-		playList = append(playList, obj)
-		counter++
-	}
 	return playList, nil
 }
 

@@ -116,17 +116,54 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 
 }
 
-func SQLExec(sqlConnectionString string, withTransaction bool, sqlCommand string, args ...any) (cnt int64, err error) {
+func SQLExec(sqlConnectionString string, withTransaction bool, sqlCommand string, args ...any) (id int64, cnt int64, err error) {
 	db, err := sql.Open("mysql", sqlConnectionString)
 	defer db.Close()
 
 	if err != nil {
-		return -1, err
+		return -1, -1, err
 	}
 	db.SetConnMaxLifetime(time.Minute * 3)
-	execResult, err := db.Exec(sqlCommand, args...)
-	if err != nil {
-		return -1, err
+
+	var execResult sql.Result
+	var insertId int64
+	var rowsAffected int64
+	if withTransaction == false {
+		execResult, err = db.Exec(sqlCommand, args...)
+	} else {
+		ctx := context.Background()
+		tx, err := db.BeginTx(ctx, nil)
+		if err != nil {
+			return -1, -1, err
+		}
+		defer tx.Rollback()
+		execResult, err = tx.ExecContext(ctx, sqlCommand, args...)
+		if err != nil {
+			return -1, -1, err
+		}
+
+		insertId, err := execResult.LastInsertId()
+		if err != nil {
+			return -1, -1, err
+		}
+
+		rowsAffected, err := execResult.RowsAffected()
+		if err != nil {
+			return -1, -1, err
+		}
+
+		if err = tx.Commit(); err != nil {
+			return insertId, rowsAffected, err
+		}
 	}
-	return execResult.RowsAffected()
+	if err != nil {
+		return -1, -1, err
+	}
+
+	insertId, err = execResult.LastInsertId()
+	if err != nil {
+		return -1, -1, err
+	}
+	rowsAffected, err = execResult.RowsAffected()
+	return insertId, rowsAffected, err
 }

@@ -48,7 +48,7 @@ func UserAddPlayLists(sqlConnectionString string, account string, productId stri
 	}
 
 	queryString := `INSERT INTO tPlayLists (fAccount, fProductID) VALUES (?,?)`
-	row, err := util.SQLExec(sqlConnectionString, false, queryString, account, productId)
+	_, row, err := util.SQLExec(sqlConnectionString, false, queryString, account, productId)
 	if err != nil {
 		return -1, err
 	}
@@ -71,7 +71,7 @@ func UserDeletePlayLists(sqlConnectionString string, account string, productId s
 
 	if exist == true {
 		queryString := `DELETE FROM tPlayLists WHERE fAccount = ? AND fProductID = ? `
-		row, err := util.SQLExec(sqlConnectionString, false, queryString, account, productId)
+		_, row, err := util.SQLExec(sqlConnectionString, false, queryString, account, productId)
 		if err != nil {
 			return -1, err
 		}

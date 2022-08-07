@@ -33,6 +33,8 @@ func SQLQuery(sqlConnectionString string, sqlCommand string, args ...any) (r *sq
 func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sqlCommand string, args ...any) (err error) {
 
 	db, err := sqlx.Open("mysql", sqlConnectionString)
+	defer db.Close()
+
 	if err != nil {
 		return err
 	}
@@ -116,6 +118,8 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 
 func SQLExec(sqlConnectionString string, withTransaction bool, sqlCommand string, args ...any) (cnt int64, err error) {
 	db, err := sql.Open("mysql", sqlConnectionString)
+	defer db.Close()
+
 	if err != nil {
 		return -1, err
 	}

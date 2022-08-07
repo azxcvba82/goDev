@@ -19,7 +19,7 @@ func GetPlayListByAccount(sqlConnectionString string, account string) (model []P
 									INNER JOIN tProducts P ON L.fProductID = P.fProductID
 									INNER JOIN tAlbum A ON P.fAlbumID = A.fAlbumID
 									WHERE L.fAccount = ? `
-	err = util.SQLQueryV2(&playList, sqlConnectionString, true, queryString, account)
+	err = util.SQLQueryV2(&playList, sqlConnectionString, false, queryString, account)
 
 	if err != nil {
 		return playList, err

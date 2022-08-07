@@ -22,11 +22,11 @@ func CreateUser(sqlConnectionString string, u *UserSignupPost) (model UserSignup
 	}
 
 	queryString := `INSERT INTO tMember (fAccount, fPassword, fEmail) VALUES (?,?,?)`
-	result, err := util.SQLExec(sqlConnectionString, queryString, u.Account, u.Password, u.Email)
+	rowId, result, err := util.SQLExec(sqlConnectionString, false, queryString, u.Account, u.Password, u.Email)
 	if err != nil {
 		return user, err
 	}
-	fmt.Println(result)
+	fmt.Println(rowId + result)
 
 	return user, nil
 }

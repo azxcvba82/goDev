@@ -174,6 +174,30 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/getShoppingCartByAccount": {
+            "get": {
+                "security": [
+                    {
+                        "securityDefinitions.apikey BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "getShoppingCartByAccount load",
+                "tags": [
+                    "ShoppingCart"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
         "/getAlbumById": {
             "get": {
                 "description": "getAlbumById load",

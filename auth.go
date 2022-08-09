@@ -105,7 +105,13 @@ func signup(c echo.Context) error {
 		}
 	}
 
-	model.CreateUser(util.GetSQLConnectString(), user)
+	_, err = model.CreateUser(util.GetSQLConnectString(), user)
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
+	}
 	return c.JSON(http.StatusCreated, user)
 }
 

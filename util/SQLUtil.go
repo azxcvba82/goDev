@@ -42,9 +42,9 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 
 	if useCache == false {
 		if strings.Contains(reflect.ValueOf(model).Type().String(), "[]") {
-			db.Select(model, sqlCommand, args...)
+			err = db.Select(model, sqlCommand, args...)
 		} else {
-			db.Get(model, sqlCommand, args...)
+			err = db.Get(model, sqlCommand, args...)
 		}
 		return err
 	}
@@ -96,9 +96,9 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 	} else {
 
 		if strings.Contains(reflect.ValueOf(model).Type().String(), "[]") {
-			db.Select(model, sqlCommand, args...)
+			err = db.Select(model, sqlCommand, args...)
 		} else {
-			db.Get(model, sqlCommand, args...)
+			err = db.Get(model, sqlCommand, args...)
 		}
 		s, err := json.Marshal(model)
 		//fmt.Println(string(s))

@@ -16,7 +16,6 @@ import (
 // @Router /api/getShoppingCartByAccount [get]
 // @security securityDefinitions.apikey BearerAuth
 // @security BearerAuth
-
 func getShoppingCartByAccount(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*jwtCustomClaims)

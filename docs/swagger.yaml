@@ -96,6 +96,19 @@ paths:
       - BearerAuth: []
       tags:
       - Album
+  /api/getShoppingCartByAccount:
+    get:
+      description: getShoppingCartByAccount load
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      security:
+      - securityDefinitions.apikey BearerAuth: []
+      - BearerAuth: []
+      tags:
+      - ShoppingCart
   /getAlbumById:
     get:
       description: getAlbumById load

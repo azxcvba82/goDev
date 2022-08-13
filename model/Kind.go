@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 	"main/util"
-	"time"
 )
 
 type Kind struct {
@@ -17,8 +16,6 @@ func AllKind(sqlConnectionString string) (model []Kind, err error) {
 	var kinds []Kind
 	queryString := `SELECT fKindID, fKindName, fColor, fPhotoPath  FROM tAlbumKind `
 	err = util.SQLQueryV2(&kinds, sqlConnectionString, true, queryString)
-
-	time.Sleep(600 * time.Second)
 
 	if err != nil {
 		return kinds, err

@@ -16,7 +16,7 @@ type HTTPResult struct {
 	HttpMethod      string
 }
 
-func HTTPGet(url string, timeOut time.Duration) (response HTTPResult, err error) {
+func HTTPGet(url string, timeOutInt int64) (response HTTPResult, err error) {
 	response.Url = url
 	response.HttpMethod = http.MethodGet
 	response.PostData = ""
@@ -26,6 +26,7 @@ func HTTPGet(url string, timeOut time.Duration) (response HTTPResult, err error)
 		fmt.Printf("client: could not create request: %s\n", err)
 		return response, err
 	}
+	var timeOut time.Duration = time.Duration(timeOutInt) * time.Second
 	http.DefaultClient.Timeout = timeOut
 
 	res, err := http.DefaultClient.Do(req)

@@ -13,6 +13,11 @@ type UserLoginPost struct {
 	Email    null.String `db:"fEmail"`
 }
 
+type UserSSOLoginPost struct {
+	StateBase64   string `db:"StateBase64"`
+	IdTokenBase64 string `db:"IdTokenBase64"`
+}
+
 func FindUser(sqlConnectionString string, u *UserLoginPost) (model UserLoginPost, err error) {
 	var user UserLoginPost
 	if u.Account == "" {

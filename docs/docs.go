@@ -327,6 +327,25 @@ const docTemplate = `{
                 }
             }
         },
+        "/getSSOConfig": {
+            "get": {
+                "description": "getSSOConfig",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "login user",
@@ -402,6 +421,36 @@ const docTemplate = `{
                     {
                         "description": "json",
                         "name": "signup",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/ssoLogin": {
+            "post": {
+                "description": "ssoLogin",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "ssoLogin",
                         "in": "body",
                         "required": true,
                         "schema": {

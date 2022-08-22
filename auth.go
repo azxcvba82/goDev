@@ -4,6 +4,7 @@ import (
 	"main/model"
 	"main/util"
 	"net/http"
+	"net/url"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -129,6 +130,44 @@ func getAccountFromJWT(c echo.Context) error {
 	claims := user.Claims.(*jwtCustomClaims)
 	account := claims.Account
 	return c.JSON(http.StatusOK, account)
+}
+
+// @Tags         Token
+// @Description getSSOConfig
+// @Accept  json
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /getSSOConfig [get]
+func getSSOConfig(c echo.Context) error {
+	params := url.Values{}
+	params.Add("state", "google")
+	params.Add("response_type", "id_token")
+	params.Add("nonce", time.Now().UTC().String())
+	params.Add("response_mode", "fragment")
+	params.Add("prompt", "select_account")
+	params.Add("scope", "openid email profile")
+	params.Add("client_id", "248375232247-fppbkkm4d0vjr8na12j64402nh9muu74.apps.googleusercontent.com")
+	params.Add("redirect_uri", "https://azxcvba99.net/")
+	var fullUrl string
+	var baseUrl string
+	baseUrl = "https://accounts.google.com/o/oauth2/auth?"
+	fullUrl = baseUrl + params.Encode()
+	return c.JSON(http.StatusOK, fullUrl)
+}
+
+// @Tags         Token
+// @Description ssoLogin
+// @Accept  json
+// @Param ssoLogin body object true "json"
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /ssoLogin [post]
+func ssoLogin(c echo.Context) error {
+	u := new(model.UserSSOLoginPost)
+	if err := c.Bind(u); err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, u.IdTokenBase64)
 }
 
 func accessible(c echo.Context) error {

@@ -35,8 +35,10 @@ func newRouter() *echo.Echo {
 	e.GET("/allkind", allkind)           // GET /allkind
 	e.GET("/allAlbumType", allAlbumType) // GET /allAlbumType
 
-	e.POST("/signup", signup) // POST /signup
-	e.POST("/login", login)   // POST /login
+	e.POST("/signup", signup)            // POST /signup
+	e.POST("/login", login)              // POST /login
+	e.GET("/getSSOConfig", getSSOConfig) // POST /getSSOConfig
+	e.POST("/ssoLogin", ssoLogin)        // POST /ssoLogin
 	e.GET("/", accessible)
 
 	api := e.Group("/api")

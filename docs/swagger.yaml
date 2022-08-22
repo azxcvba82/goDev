@@ -192,6 +192,18 @@ paths:
           description: error
       tags:
       - Search
+  /getSSOConfig:
+    get:
+      consumes:
+      - application/json
+      description: getSSOConfig
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Token
   /login:
     post:
       consumes:
@@ -240,6 +252,25 @@ paths:
       - description: json
         in: body
         name: signup
+        required: true
+        schema:
+          type: object
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Token
+  /ssoLogin:
+    post:
+      consumes:
+      - application/json
+      description: ssoLogin
+      parameters:
+      - description: json
+        in: body
+        name: ssoLogin
         required: true
         schema:
           type: object

@@ -149,8 +149,8 @@ func getSSOConfig(c echo.Context) error {
 	params.Add("prompt", "select_account")
 	params.Add("scope", "openid email profile")
 	params.Add("client_id", "248375232247-fppbkkm4d0vjr8na12j64402nh9muu74.apps.googleusercontent.com")
-	//params.Add("redirect_uri", "https://azxcvba99.net/")
-	params.Add("redirect_uri", "http://localhost:3000/")
+	params.Add("redirect_uri", "https://azxcvba99.net/")
+
 	var fullUrl string
 	var baseUrl string
 	baseUrl = "https://accounts.google.com/o/oauth2/auth?"

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"main/model"
 	"main/util"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
+	"google.golang.org/api/idtoken"
 )
 
 var signingKey = []byte("secret")
@@ -147,7 +149,8 @@ func getSSOConfig(c echo.Context) error {
 	params.Add("prompt", "select_account")
 	params.Add("scope", "openid email profile")
 	params.Add("client_id", "248375232247-fppbkkm4d0vjr8na12j64402nh9muu74.apps.googleusercontent.com")
-	params.Add("redirect_uri", "https://azxcvba99.net/")
+	//params.Add("redirect_uri", "https://azxcvba99.net/")
+	params.Add("redirect_uri", "http://localhost:3000/")
 	var fullUrl string
 	var baseUrl string
 	baseUrl = "https://accounts.google.com/o/oauth2/auth?"
@@ -167,7 +170,11 @@ func ssoLogin(c echo.Context) error {
 	if err := c.Bind(u); err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, u.IdTokenBase64)
+	payload, err := idtoken.Validate(context.Background(), u.IdTokenBase64, "248375232247-fppbkkm4d0vjr8na12j64402nh9muu74.apps.googleusercontent.com")
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, payload.Claims)
 }
 
 func accessible(c echo.Context) error {

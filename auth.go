@@ -223,7 +223,6 @@ func ssoLogin(c echo.Context) error {
 		"token":     t,
 		"expiresAt": expiresTime.Format(time.RFC1123),
 	})
-
 }
 
 func accessible(c echo.Context) error {

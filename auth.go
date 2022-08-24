@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"main/model"
 	"main/util"
 	"net/http"
@@ -27,7 +28,10 @@ func login(c echo.Context) error {
 	//return c.String(http.StatusOK, "Hello, World!")
 	u := new(model.UserLoginPost)
 	if err := c.Bind(u); err != nil {
-		return err
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
 	}
 	if u.Account == "" {
 		return &echo.HTTPError{
@@ -85,7 +89,10 @@ func login(c echo.Context) error {
 func signup(c echo.Context) error {
 	user := new(model.UserSignupPost)
 	if err := c.Bind(user); err != nil {
-		return err
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
 	}
 
 	if user.Account == "" || user.Password == "" {
@@ -168,13 +175,55 @@ func getSSOConfig(c echo.Context) error {
 func ssoLogin(c echo.Context) error {
 	u := new(model.UserSSOLoginPost)
 	if err := c.Bind(u); err != nil {
-		return err
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
 	}
 	payload, err := idtoken.Validate(context.Background(), u.IdTokenBase64, "248375232247-fppbkkm4d0vjr8na12j64402nh9muu74.apps.googleusercontent.com")
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, payload.Claims)
+
+	if payload.Claims["email_verified"].(bool) == false {
+		return errors.New("email not verified")
+	}
+
+	var userForCheck model.UserLoginPost
+	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: payload.Claims["email"].(string)})
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
+	} else if user == userForCheck {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: "user not found",
+		}
+	}
+
+	expiresTime := time.Now().UTC().Add(time.Hour * 6)
+	claims := &jwtCustomClaims{
+		user.Account,
+		user.Email,
+		jwt.StandardClaims{
+			ExpiresAt: expiresTime.Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	t, err := token.SignedString(signingKey)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"account":   user.Account,
+		"token":     t,
+		"expiresAt": expiresTime.Format(time.RFC1123),
+	})
+
 }
 
 func accessible(c echo.Context) error {

@@ -197,7 +197,7 @@ func ssoLogin(c echo.Context) error {
 	var userForCheck model.UserLoginPost
 	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: payload.Claims["email"].(string)})
 	if user == userForCheck && err.Error() == "sql: no rows in result set" {
-		userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso4Func#", Email: payload.Claims["email"].(null.String)})
+		userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso4Func#"})
 		if err != nil {
 			return &echo.HTTPError{
 				Code:    http.StatusBadRequest,
@@ -219,7 +219,7 @@ func ssoLogin(c echo.Context) error {
 		if err != nil {
 			return err
 		}
-
+    
 		return c.JSON(http.StatusOK, map[string]string{
 			"account":   userCreate.Account,
 			"token":     t,

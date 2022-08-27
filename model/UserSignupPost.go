@@ -27,6 +27,9 @@ func CreateUser(sqlConnectionString string, u *UserSignupPost) (model UserSignup
 		return user, err
 	}
 	fmt.Println(rowId + result)
+	user.Account = u.Account
+	user.Password = u.Password
+	user.Email = u.Email
 
 	return user, nil
 }

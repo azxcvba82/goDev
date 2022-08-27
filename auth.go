@@ -13,7 +13,6 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"google.golang.org/api/idtoken"
-	"gopkg.in/guregu/null.v4"
 )
 
 var signingKey = []byte("secret")
@@ -219,7 +218,7 @@ func ssoLogin(c echo.Context) error {
 		if err != nil {
 			return err
 		}
-    
+
 		return c.JSON(http.StatusOK, map[string]string{
 			"account":   userCreate.Account,
 			"token":     t,

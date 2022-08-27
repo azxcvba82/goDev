@@ -13,6 +13,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"google.golang.org/api/idtoken"
+	"gopkg.in/guregu/null.v4"
 )
 
 var signingKey = []byte("secret")
@@ -196,10 +197,35 @@ func ssoLogin(c echo.Context) error {
 	var userForCheck model.UserLoginPost
 	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: payload.Claims["email"].(string)})
 	if user == userForCheck && err.Error() == "sql: no rows in result set" {
-		return &echo.HTTPError{
-			Code:    http.StatusBadRequest,
-			Message: "user not found",
+
+		userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso4Func#", Email: payload.Claims["email"].(null.String)})
+		if err != nil {
+			return &echo.HTTPError{
+				Code:    http.StatusBadRequest,
+				Message: err.Error(),
+			}
 		}
+
+		expiresTime := time.Now().UTC().Add(time.Hour * 6)
+		claims := &jwtCustomClaims{
+			userCreate.Account,
+			userCreate.Email,
+			jwt.StandardClaims{
+				ExpiresAt: expiresTime.Unix(),
+			},
+		}
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		t, err := token.SignedString(signingKey)
+		if err != nil {
+			return err
+		}
+
+		return c.JSON(http.StatusOK, map[string]string{
+			"account":   userCreate.Account,
+			"token":     t,
+			"expiresAt": expiresTime.Format(time.RFC1123),
+		})
 	} else if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,

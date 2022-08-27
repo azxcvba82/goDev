@@ -27,9 +27,7 @@ func FindUser(sqlConnectionString string, u *UserLoginPost) (model UserLoginPost
 
 	queryString := `SELECT fAccount, fPassword, fEmail  FROM tMember WHERE fAccount = ? LIMIT 1`
 	err = util.SQLQueryV2(&user, sqlConnectionString, false, queryString, u.Account)
-	if err.Error() == "sql: no rows in result set" {
-		return user, nil
-	}
+
 	if err != nil {
 		return user, err
 	}

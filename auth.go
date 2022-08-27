@@ -157,6 +157,7 @@ func getSSOConfig(c echo.Context) error {
 	params.Add("scope", "openid email profile")
 	params.Add("client_id", "248375232247-fppbkkm4d0vjr8na12j64402nh9muu74.apps.googleusercontent.com")
 	params.Add("redirect_uri", "https://azxcvba99.net/")
+	//params.Add("redirect_uri", "http://localhost:3000/")
 
 	var fullUrl string
 	var baseUrl string
@@ -182,7 +183,10 @@ func ssoLogin(c echo.Context) error {
 	}
 	payload, err := idtoken.Validate(context.Background(), u.IdTokenBase64, "248375232247-fppbkkm4d0vjr8na12j64402nh9muu74.apps.googleusercontent.com")
 	if err != nil {
-		return err
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error() + "sso test",
+		}
 	}
 
 	if payload.Claims["email_verified"].(bool) == false {
@@ -191,15 +195,15 @@ func ssoLogin(c echo.Context) error {
 
 	var userForCheck model.UserLoginPost
 	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: payload.Claims["email"].(string)})
-	if err != nil {
-		return &echo.HTTPError{
-			Code:    http.StatusBadRequest,
-			Message: err.Error(),
-		}
-	} else if user == userForCheck {
+	if user == userForCheck && err.Error() == "sql: no rows in result set" {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
 			Message: "user not found",
+		}
+	} else if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
 		}
 	}
 

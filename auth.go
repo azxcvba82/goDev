@@ -13,7 +13,6 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"google.golang.org/api/idtoken"
-	"gopkg.in/guregu/null.v4"
 )
 
 var signingKey = []byte("secret")
@@ -198,7 +197,7 @@ func ssoLogin(c echo.Context) error {
 	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: payload.Claims["email"].(string)})
 	if user == userForCheck && err.Error() == "sql: no rows in result set" {
 
-		userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso4Func#", Email: payload.Claims["email"].(null.String)})
+		userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso4Func#"})
 		if err != nil {
 			return &echo.HTTPError{
 				Code:    http.StatusBadRequest,

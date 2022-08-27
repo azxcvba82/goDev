@@ -13,7 +13,6 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"google.golang.org/api/idtoken"
-	"gopkg.in/guregu/null.v4"
 )
 
 var signingKey = []byte("secret")

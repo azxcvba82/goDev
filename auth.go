@@ -26,7 +26,7 @@ var signingKey = []byte("secret")
 // @Router /login [post]
 func login(c echo.Context) error {
 	//return c.String(http.StatusOK, "Hello, World!")
-	u := new(model.UserLoginPost)
+	u := new(model.UserSignupPost)
 	if err := c.Bind(u); err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -39,8 +39,8 @@ func login(c echo.Context) error {
 			Message: "empty name",
 		}
 	}
-	var userForCheck model.UserLoginPost
-	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: u.Account})
+	var userForCheck model.UserSignupPost
+	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserSignupPost{Account: u.Account})
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusBadRequest,
@@ -102,7 +102,7 @@ func signup(c echo.Context) error {
 		}
 	}
 
-	u, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: user.Account})
+	u, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserSignupPost{Account: user.Account})
 	if err != nil {
 		return &echo.HTTPError{
 			Code:    http.StatusConflict,
@@ -115,14 +115,34 @@ func signup(c echo.Context) error {
 		}
 	}
 
-	_, err = model.CreateUser(util.GetSQLConnectString(), user)
-	if err != nil {
-		return &echo.HTTPError{
-			Code:    http.StatusBadRequest,
-			Message: err.Error(),
-		}
+	// _, err = model.CreateUser(util.GetSQLConnectString(), user)
+	// if err != nil {
+	// 	return &echo.HTTPError{
+	// 		Code:    http.StatusBadRequest,
+	// 		Message: err.Error(),
+	// 	}
+	// }
+	expiresTime := time.Now().UTC().Add(time.Minute * 15)
+	claims := &jwtCustomClaims{
+		user.Account,
+		user.Email,
+		jwt.StandardClaims{
+			ExpiresAt: expiresTime.Unix(),
+		},
 	}
-	return c.JSON(http.StatusCreated, user)
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	t, err := token.SignedString(signingKey)
+	if err != nil {
+		return err
+	}
+	message := "https://azxcvba99.net/verify?token=" + t
+	res, err := model.SendMail(util.GetSQLConnectStringRead(), user.Email, "Email verification", message)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusAccepted, res)
 }
 
 // @Tags         Token
@@ -193,11 +213,12 @@ func ssoLogin(c echo.Context) error {
 		return errors.New("email not verified")
 	}
 
-	var userForCheck model.UserLoginPost
-	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserLoginPost{Account: payload.Claims["email"].(string)})
+	var userForCheck model.UserSignupPost
+	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserSignupPost{Account: payload.Claims["email"].(string)})
 	if user == userForCheck && err.Error() == "sql: no rows in result set" {
-		userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso4Func#"})
-		if err != nil {
+	  userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso", Email: payload.Claims["email"].(string)})
+		
+    if err != nil {
 			return &echo.HTTPError{
 				Code:    http.StatusBadRequest,
 				Message: err.Error(),

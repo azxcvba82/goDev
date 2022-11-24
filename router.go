@@ -7,12 +7,11 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
-	"gopkg.in/guregu/null.v4"
 )
 
 type jwtCustomClaims struct {
-	Account string      `json:"account"`
-	Email   null.String `json:"email"`
+	Account string `json:"account"`
+	Email   string `json:"email"`
 	jwt.StandardClaims
 }
 

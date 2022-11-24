@@ -25,6 +25,7 @@ func GetSysConfig(sqlConnectionString string, key string) (value string, err err
 	return obj, nil
 }
 
+
 func SendMail(sqlConnectionString string, address string, subject string, msg string) (res string, err error) {
 
 	var obj SMTPConfig

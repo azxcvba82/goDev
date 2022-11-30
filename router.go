@@ -21,7 +21,7 @@ func newRouter() *echo.Echo {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
+	  AllowOrigins: []string{"*"},
 	}))
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

@@ -20,7 +20,9 @@ func newRouter() *echo.Echo {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000", "https://azxcvba99.net"},
+	}))
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 

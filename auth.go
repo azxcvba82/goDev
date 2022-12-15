@@ -134,12 +134,12 @@ func signup(c echo.Context) error {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString(signingKey)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, err)
 	}
 	message := "https://azxcvba99.net/verify?token=" + t
 	res, err := model.SendMail(util.GetSQLConnectStringRead(), user.Email, "Email verification", message)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, res+"/"+err.Error())
 	}
 
 	return c.JSON(http.StatusAccepted, res)

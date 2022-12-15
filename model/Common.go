@@ -25,12 +25,17 @@ func GetSysConfig(sqlConnectionString string, key string) (value string, err err
 	return obj, nil
 }
 
-
 func SendMail(sqlConnectionString string, address string, subject string, msg string) (res string, err error) {
 
 	var obj SMTPConfig
 	stmpConfig, err := GetSysConfig(sqlConnectionString, "SMTPConfig")
+	if err != nil {
+		return stmpConfig, err
+	}
 	err = json.Unmarshal([]byte(stmpConfig), &obj)
+	if err != nil {
+		return stmpConfig, err
+	}
 
 	from := mail.NewEmail("platform user", obj.From)
 	to := mail.NewEmail("no-reply", address)
@@ -39,8 +44,8 @@ func SendMail(sqlConnectionString string, address string, subject string, msg st
 	response, err := client.Send(message)
 
 	if err != nil {
-		return response.Body, nil
-	} else {
 		return response.Body, err
+	} else {
+		return response.Body, nil
 	}
 }

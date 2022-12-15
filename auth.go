@@ -103,14 +103,14 @@ func signup(c echo.Context) error {
 	}
 
 	u, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserSignupPost{Account: user.Account})
-	if err != nil {
+	if err != nil && err.Error() != "sql: no rows in result set" {
 		return &echo.HTTPError{
-			Code:    http.StatusConflict,
+			Code:    http.StatusBadRequest,
 			Message: err.Error(),
 		}
 	} else if u.Account == user.Account {
 		return &echo.HTTPError{
-			Code:    http.StatusBadRequest,
+			Code:    http.StatusConflict,
 			Message: "name already exists",
 		}
 	}
@@ -216,9 +216,9 @@ func ssoLogin(c echo.Context) error {
 	var userForCheck model.UserSignupPost
 	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserSignupPost{Account: payload.Claims["email"].(string)})
 	if user == userForCheck && err.Error() == "sql: no rows in result set" {
-	  userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso", Email: payload.Claims["email"].(string)})
-		
-    if err != nil {
+		userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso", Email: payload.Claims["email"].(string)})
+
+		if err != nil {
 			return &echo.HTTPError{
 				Code:    http.StatusBadRequest,
 				Message: err.Error(),
@@ -239,7 +239,7 @@ func ssoLogin(c echo.Context) error {
 		if err != nil {
 			return err
 		}
-    
+
 		return c.JSON(http.StatusOK, map[string]string{
 			"account":   userCreate.Account,
 			"token":     t,

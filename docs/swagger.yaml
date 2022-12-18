@@ -281,6 +281,25 @@ paths:
           description: error
       tags:
       - Token
+  /verify:
+    post:
+      consumes:
+      - application/json
+      description: verify account regist token
+      parameters:
+      - description: json
+        in: body
+        name: verify
+        required: true
+        schema:
+          type: object
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      tags:
+      - Token
 securityDefinitions:
   BearerAuth:
     in: header

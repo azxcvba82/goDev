@@ -308,10 +308,9 @@ func verify(c echo.Context) error {
 	})
 
 	if claims, ok := tokenVerify.Claims.(jwt.MapClaims); ok && tokenVerify.Valid {
-		fmt.Printf("user_id: %v\n", string(claims["Account"].(string)))
-		fmt.Printf("exp: %v\n", int64(claims["exp"].(float64)))
 		return c.JSON(http.StatusOK, map[string]string{
-			"account": string(claims["Account"].(string)),
+			"account": string(claims["account"].(string)),
+			"token":   u.Token,
 		})
 	} else {
 		return c.JSON(http.StatusUnauthorized, err.Error())

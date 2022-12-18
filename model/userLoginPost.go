@@ -10,6 +10,10 @@ type UserSSOLoginPost struct {
 	IdTokenBase64 string `db:"IdTokenBase64"`
 }
 
+type UserVerifyPost struct {
+	Token string `db:"token"`
+}
+
 func FindUser(sqlConnectionString string, u *UserSignupPost) (model UserSignupPost, err error) {
 	var user UserSignupPost
 	if u.Account == "" {

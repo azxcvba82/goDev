@@ -458,6 +458,36 @@
                     }
                 }
             }
+        },
+        "/verify": {
+            "post": {
+                "description": "verify account regist token",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "parameters": [
+                    {
+                        "description": "json",
+                        "name": "verify",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    },
+                    "500": {
+                        "description": "error"
+                    }
+                }
+            }
         }
     },
     "securityDefinitions": {

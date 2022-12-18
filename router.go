@@ -21,7 +21,7 @@ func newRouter() *echo.Echo {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-	  AllowOrigins: []string{"*"},
+		AllowOrigins: []string{"*"},
 	}))
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
@@ -37,6 +37,7 @@ func newRouter() *echo.Echo {
 	e.GET("/allAlbumType", allAlbumType) // GET /allAlbumType
 
 	e.POST("/signup", signup)            // POST /signup
+	e.POST("/verify", verify)            // POST /verify
 	e.POST("/login", login)              // POST /login
 	e.GET("/getSSOConfig", getSSOConfig) // POST /getSSOConfig
 	e.POST("/ssoLogin", ssoLogin)        // POST /ssoLogin

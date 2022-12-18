@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"main/model"
 	"main/util"
 	"net/http"
@@ -272,6 +273,52 @@ func ssoLogin(c echo.Context) error {
 		"token":     t,
 		"expiresAt": expiresTime.Format(time.RFC1123),
 	})
+}
+
+// @Tags         Token
+// @Description verify account regist token
+// @Accept  json
+// @Param verify body object true "json"
+// @Success 200 "ok"
+// @Failure 500 "error"
+// @Router /verify [post]
+func verify(c echo.Context) error {
+
+	u := new(model.UserVerifyPost)
+
+	if err := c.Bind(u); err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
+	}
+	if u.Token == "" {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: "empty token",
+		}
+	}
+
+	tokenVerify, err := jwt.Parse(u.Token, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+		if !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(signingKey), nil
+	})
+
+	if claims, ok := tokenVerify.Claims.(jwt.MapClaims); ok && tokenVerify.Valid {
+		fmt.Printf("user_id: %v\n", string(claims["Account"].(string)))
+		fmt.Printf("exp: %v\n", int64(claims["exp"].(float64)))
+		return c.JSON(http.StatusOK, map[string]string{
+			"account":   string(claims["Account"].(string)),
+			"token":     u.Token,
+			"expiresAt": claims["exp"].(time.Time).Format(time.RFC1123),
+		})
+	} else {
+		return c.JSON(http.StatusUnauthorized, err.Error())
+	}
+
 }
 
 func accessible(c echo.Context) error {

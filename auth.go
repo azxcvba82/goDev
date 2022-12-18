@@ -311,9 +311,7 @@ func verify(c echo.Context) error {
 		fmt.Printf("user_id: %v\n", string(claims["Account"].(string)))
 		fmt.Printf("exp: %v\n", int64(claims["exp"].(float64)))
 		return c.JSON(http.StatusOK, map[string]string{
-			"account":   string(claims["Account"].(string)),
-			"token":     u.Token,
-			"expiresAt": claims["exp"].(time.Time).Format(time.RFC1123),
+			"account": string(claims["Account"].(string)),
 		})
 	} else {
 		return c.JSON(http.StatusUnauthorized, err.Error())

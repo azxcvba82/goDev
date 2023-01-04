@@ -103,7 +103,7 @@ func SQLQueryV2(model interface{}, sqlConnectionString string, useCache bool, sq
 		s, err := json.Marshal(model)
 		//fmt.Println(string(s))
 
-		if cacheAvailable == true {
+		if cacheAvailable == true && s != nil {
 			var cacheDuration time.Duration = 86400 * time.Second
 			_, err = rdb.Set(ctx, md5Result, string(s), cacheDuration).Result()
 			if err != nil {

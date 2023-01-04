@@ -12,15 +12,20 @@ type UserSignupPost struct {
 	Email    string `db:"fEmail"`
 }
 
-func CreateUser(sqlConnectionString string, u *UserSignupPost) (model UserSignupPost, err error) {
+func CreateUser(sqlConnectionString string, u *UserSignupPost, isActive bool) (model UserSignupPost, err error) {
 	var user UserSignupPost
 	if u.Account == "" {
 		outputErr := errors.New("Account empty")
 		return user, outputErr
 	}
 
-	queryString := `INSERT INTO tMember (fAccount, fPassword, fEmail) VALUES (?,?,?)`
-	rowId, result, err := util.SQLExec(sqlConnectionString, false, queryString, u.Account, u.Password, u.Email)
+	active := "N"
+	if isActive == true {
+		active = "Y"
+	}
+
+	queryString := `INSERT INTO tMember (fAccount, fPassword, fEmail, fisActive) VALUES (?,?,?,?)`
+	rowId, result, err := util.SQLExec(sqlConnectionString, false, queryString, u.Account, u.Password, u.Email, active)
 	if err != nil {
 		return user, err
 	}
@@ -30,4 +35,16 @@ func CreateUser(sqlConnectionString string, u *UserSignupPost) (model UserSignup
 	user.Email = u.Email
 
 	return user, nil
+}
+
+func ActivateUser(sqlConnectionString string, Account string) (err error) {
+
+	queryString := `UPDATE tMember SET fisActive = 'Y' WHERE fAccount = ? `
+	_, result, err := util.SQLExec(sqlConnectionString, false, queryString, Account)
+	if err != nil {
+		return err
+	}
+	fmt.Println(result)
+
+	return nil
 }

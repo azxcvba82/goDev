@@ -116,13 +116,6 @@ func signup(c echo.Context) error {
 		}
 	}
 
-	// _, err = model.CreateUser(util.GetSQLConnectString(), user)
-	// if err != nil {
-	// 	return &echo.HTTPError{
-	// 		Code:    http.StatusBadRequest,
-	// 		Message: err.Error(),
-	// 	}
-	// }
 	expiresTime := time.Now().UTC().Add(time.Minute * 15)
 	claims := &jwtCustomClaims{
 		user.Account,
@@ -141,6 +134,13 @@ func signup(c echo.Context) error {
 	res, err := model.SendMail(util.GetSQLConnectStringRead(), user.Email, "Email verification", message)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, res+"/"+err.Error())
+	}
+	_, err = model.CreateUser(util.GetSQLConnectString(), user, false)
+	if err != nil {
+		return &echo.HTTPError{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		}
 	}
 
 	return c.JSON(http.StatusAccepted, res)
@@ -217,7 +217,7 @@ func ssoLogin(c echo.Context) error {
 	var userForCheck model.UserSignupPost
 	user, err := model.FindUser(util.GetSQLConnectStringRead(), &model.UserSignupPost{Account: payload.Claims["email"].(string)})
 	if user == userForCheck && err.Error() == "sql: no rows in result set" {
-		userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso", Email: payload.Claims["email"].(string)})
+		userCreate, err := model.CreateUser(util.GetSQLConnectString(), &model.UserSignupPost{Account: payload.Claims["email"].(string), Password: "sso", Email: payload.Claims["email"].(string)}, true)
 
 		if err != nil {
 			return &echo.HTTPError{
@@ -308,6 +308,16 @@ func verify(c echo.Context) error {
 	})
 
 	if claims, ok := tokenVerify.Claims.(jwt.MapClaims); ok && tokenVerify.Valid {
+
+		account := string(claims["account"].(string))
+		err := model.ActivateUser(util.GetSQLConnectString(), account)
+		if err != nil {
+			return &echo.HTTPError{
+				Code:    http.StatusBadRequest,
+				Message: err.Error(),
+			}
+		}
+
 		return c.JSON(http.StatusOK, map[string]string{
 			"account": string(claims["account"].(string)),
 			"token":   u.Token,

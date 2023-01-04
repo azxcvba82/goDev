@@ -21,7 +21,7 @@ func FindUser(sqlConnectionString string, u *UserSignupPost) (model UserSignupPo
 		return user, outputErr
 	}
 
-	queryString := `SELECT fAccount, fPassword, fEmail  FROM tMember WHERE fAccount = ? LIMIT 1`
+	queryString := `SELECT fAccount, fPassword, fEmail  FROM tMember WHERE fAccount = ? AND fisActive = 'Y' LIMIT 1`
 	err = util.SQLQueryV2(&user, sqlConnectionString, false, queryString, u.Account)
 
 	if err != nil {

@@ -62,6 +62,19 @@ paths:
       - BearerAuth: []
       tags:
       - Album
+  /api/flushAllCache:
+    get:
+      description: Flush All Cache
+      responses:
+        "200":
+          description: ok
+        "500":
+          description: error
+      security:
+      - securityDefinitions.apikey BearerAuth: []
+      - BearerAuth: []
+      tags:
+      - Homepage
   /api/getAccountFromJWT:
     get:
       consumes:

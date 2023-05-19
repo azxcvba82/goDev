@@ -167,3 +167,22 @@ func SQLExec(sqlConnectionString string, withTransaction bool, sqlCommand string
 	rowsAffected, err = execResult.RowsAffected()
 	return insertId, rowsAffected, err
 }
+
+func FlushAllCache() (err error) {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     os.Getenv("REDISADDRESS"),
+		Password: os.Getenv("REDISPASSWORD"),
+		DB:       0,
+	})
+
+	ctx := context.Background()
+
+	_, err = rdb.Ping(ctx).Result()
+	if err != nil {
+		fmt.Println("redis conn err:" + err.Error())
+		return err
+	}
+
+	_, err = rdb.ShutdownNoSave(ctx).Result()
+	return err
+}

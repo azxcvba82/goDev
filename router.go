@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+	"main/config"
 	_ "main/docs"
 
 	"github.com/golang-jwt/jwt"
@@ -24,6 +26,12 @@ func newRouter() *echo.Echo {
 		AllowOrigins: []string{"*"},
 	}))
 
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+	_ = cfg
+
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.GET("/mainActivities", mainActivities)                     // GET /mainActivities
@@ -36,17 +44,18 @@ func newRouter() *echo.Echo {
 	e.GET("/allkind", allkind)           // GET /allkind
 	e.GET("/allAlbumType", allAlbumType) // GET /allAlbumType
 
-	e.POST("/signup", signup)            // POST /signup
-	e.POST("/verify", verify)            // POST /verify
-	e.POST("/login", login)              // POST /login
-	e.GET("/getSSOConfig", getSSOConfig) // POST /getSSOConfig
-	e.POST("/ssoLogin", ssoLogin)        // POST /ssoLogin
+	authHandler := NewAuthHandler(cfg.JWTSecret)
+	e.POST("/signup", authHandler.Signup)     // POST /signup
+	e.POST("/verify", authHandler.Verify)     // POST /verify
+	e.POST("/login", authHandler.Login)       // POST /login
+	e.GET("/getSSOConfig", getSSOConfig)      // GET /getSSOConfig
+	e.POST("/ssoLogin", authHandler.SsoLogin) // POST /ssoLogin
 	e.GET("/", accessible)
 
 	api := e.Group("/api")
 	api.Use(middleware.JWTWithConfig(middleware.JWTConfig{
 		Claims:     &jwtCustomClaims{},
-		SigningKey: []byte("secret"),
+		SigningKey: cfg.JWTSecret,
 	}))
 
 	api.GET("", getAccountFromJWT)

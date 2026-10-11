@@ -16,7 +16,15 @@ import (
 	"google.golang.org/api/idtoken"
 )
 
-var signingKey = []byte("secret")
+type AuthHandler struct {
+	signingKey []byte
+}
+
+func NewAuthHandler(signingKey []byte) *AuthHandler {
+	return &AuthHandler{
+		signingKey: signingKey,
+	}
+}
 
 // @Tags         Token
 // @Description login user
@@ -25,7 +33,7 @@ var signingKey = []byte("secret")
 // @Success 200 "ok"
 // @Failure 500 "error"
 // @Router /login [post]
-func login(c echo.Context) error {
+func (h *AuthHandler) Login(c echo.Context) error {
 	//return c.String(http.StatusOK, "Hello, World!")
 	u := new(model.UserSignupPost)
 	if err := c.Bind(u); err != nil {
@@ -68,7 +76,7 @@ func login(c echo.Context) error {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token.SignedString(signingKey)
+	t, err := token.SignedString(h.signingKey)
 	if err != nil {
 		return err
 	}
@@ -87,7 +95,7 @@ func login(c echo.Context) error {
 // @Success 200 "ok"
 // @Failure 500 "error"
 // @Router /signup [post]
-func signup(c echo.Context) error {
+func (h *AuthHandler) Signup(c echo.Context) error {
 	user := new(model.UserSignupPost)
 	if err := c.Bind(user); err != nil {
 		return &echo.HTTPError{
@@ -126,7 +134,7 @@ func signup(c echo.Context) error {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token.SignedString(signingKey)
+	t, err := token.SignedString(h.signingKey)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
@@ -194,7 +202,7 @@ func getSSOConfig(c echo.Context) error {
 // @Success 200 "ok"
 // @Failure 500 "error"
 // @Router /ssoLogin [post]
-func ssoLogin(c echo.Context) error {
+func (h *AuthHandler) SsoLogin(c echo.Context) error {
 	u := new(model.UserSSOLoginPost)
 	if err := c.Bind(u); err != nil {
 		return &echo.HTTPError{
@@ -236,7 +244,7 @@ func ssoLogin(c echo.Context) error {
 		}
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-		t, err := token.SignedString(signingKey)
+		t, err := token.SignedString(h.signingKey)
 		if err != nil {
 			return err
 		}
@@ -263,7 +271,7 @@ func ssoLogin(c echo.Context) error {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token.SignedString(signingKey)
+	t, err := token.SignedString(h.signingKey)
 	if err != nil {
 		return err
 	}
@@ -282,7 +290,7 @@ func ssoLogin(c echo.Context) error {
 // @Success 200 "ok"
 // @Failure 500 "error"
 // @Router /verify [post]
-func verify(c echo.Context) error {
+func (h *AuthHandler) Verify(c echo.Context) error {
 
 	u := new(model.UserVerifyPost)
 
@@ -304,7 +312,7 @@ func verify(c echo.Context) error {
 		if !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(signingKey), nil
+		return []byte(h.signingKey), nil
 	})
 
 	if claims, ok := tokenVerify.Claims.(jwt.MapClaims); ok && tokenVerify.Valid {

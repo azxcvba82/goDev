@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"reflect"
@@ -180,7 +181,7 @@ func FlushAllCache() (err error) {
 	_, err = rdb.Ping(ctx).Result()
 	if err != nil {
 		fmt.Println("redis conn err:" + err.Error())
-		return err
+		return errors.New("redis connection error!")
 	}
 
 	_, err = rdb.ShutdownNoSave(ctx).Result()

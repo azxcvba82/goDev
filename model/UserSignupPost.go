@@ -7,9 +7,10 @@ import (
 )
 
 type UserSignupPost struct {
-	Account  string `db:"fAccount"`
-	Password string `db:"fPassword"`
-	Email    string `db:"fEmail"`
+	Account   string `db:"fAccount"`
+	Password  string `db:"fPassword"`
+	Email     string `db:"fEmail"`
+	Privilege int    `db:"fPrivilege"`
 }
 
 func CreateUser(sqlConnectionString string, u *UserSignupPost, isActive bool) (model UserSignupPost, err error) {

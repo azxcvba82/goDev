@@ -67,9 +67,16 @@ func (h *AuthHandler) Login(c echo.Context) error {
 		}
 	}
 	expiresTime := time.Now().UTC().Add(time.Hour * 6)
+	role := "user"
+	if user.Privilege == 0 {
+		role = "admin"
+	}
+
 	claims := &jwtCustomClaims{
 		user.Account,
 		user.Email,
+		role,
+		[]string{role},
 		jwt.StandardClaims{
 			ExpiresAt: expiresTime.Unix(),
 		},
@@ -128,6 +135,8 @@ func (h *AuthHandler) Signup(c echo.Context) error {
 	claims := &jwtCustomClaims{
 		user.Account,
 		user.Email,
+		"user",
+		[]string{"user"},
 		jwt.StandardClaims{
 			ExpiresAt: expiresTime.Unix(),
 		},
@@ -238,6 +247,8 @@ func (h *AuthHandler) SsoLogin(c echo.Context) error {
 		claims := &jwtCustomClaims{
 			userCreate.Account,
 			userCreate.Email,
+			"user",
+			[]string{"user"},
 			jwt.StandardClaims{
 				ExpiresAt: expiresTime.Unix(),
 			},
@@ -265,6 +276,8 @@ func (h *AuthHandler) SsoLogin(c echo.Context) error {
 	claims := &jwtCustomClaims{
 		user.Account,
 		user.Email,
+		"user",
+		[]string{"user"},
 		jwt.StandardClaims{
 			ExpiresAt: expiresTime.Unix(),
 		},

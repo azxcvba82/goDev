@@ -4,6 +4,7 @@ import (
 	"log"
 	"main/config"
 	_ "main/docs"
+	"net/http"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
@@ -12,9 +13,42 @@ import (
 )
 
 type jwtCustomClaims struct {
-	Account string `json:"account"`
-	Email   string `json:"email"`
+	Account string   `json:"account"`
+	Email   string   `json:"email"`
+	Role    string   `json:"role"`
+	Roles   []string `json:"roles,omitempty"`
 	jwt.StandardClaims
+}
+
+func RequireRole(requiredRole string) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			user, ok := c.Get("user").(*jwt.Token)
+			if !ok || user == nil || !user.Valid {
+				return echo.NewHTTPError(
+					http.StatusUnauthorized,
+					"Invalid or missing JWT",
+				)
+			}
+
+			claims, ok := user.Claims.(*jwtCustomClaims)
+			if !ok {
+				return echo.NewHTTPError(
+					http.StatusUnauthorized,
+					"Invalid JWT claims",
+				)
+			}
+
+			if claims.Role != requiredRole {
+				return echo.NewHTTPError(
+					http.StatusForbidden,
+					"Insufficient permissions",
+				)
+			}
+
+			return next(c)
+		}
+	}
 }
 
 func newRouter() *echo.Echo {
@@ -59,7 +93,7 @@ func newRouter() *echo.Echo {
 	}))
 
 	api.GET("", getAccountFromJWT)
-	api.GET("/flushAllCache", flushAllCache)                       // GET /api/flushAllCache
+	api.GET("/flushAllCache", flushAllCache, RequireRole("admin")) // GET /api/flushAllCache
 	api.GET("/getAccountFromJWT", getAccountFromJWT)               // GET /api/getAccountFromJWT
 	api.GET("/getShoppingCartByAccount", getShoppingCartByAccount) // GET /api/getShoppingCartByAccount
 	api.GET("/getPlayListByAccount", getPlayListByAccount)         // GET /api/getPlayListByAccount
